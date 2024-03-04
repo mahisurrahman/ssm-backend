@@ -99,6 +99,7 @@ const showSingleProduct = async (req, res) => {
 const updateAProductInfo = async (req, res) => {
   try {
     const id = req.params.id;
+    const filter = { _id : id};
     const updatedInfo = req.body;
     let myUpData = {};
 
@@ -110,7 +111,7 @@ const updateAProductInfo = async (req, res) => {
       myUpData.description = updatedInfo.description;
     }
     const updatedData = {$set: myUpData};
-    const result = await Products.updateOne(id, updatedData);
+    const result = await Products.updateOne(filter, updatedData);
 
     return res.send({
       status: 200,
