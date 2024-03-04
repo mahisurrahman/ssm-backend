@@ -100,34 +100,17 @@ const updateAProductInfo = async (req, res) => {
   try {
     const id = req.params.id;
     const updatedInfo = req.body;
+    let myUpData = {};
 
-    if (updatedInfo?.productName !== "") {
-      const updatedData = {
-        $set: {
-          productName: updatedInfo?.productName,
-        },
-      };
-      const result = await Products.updateOne(id, updatedData);
-    } 
-    
-    else if (updatedInfo?.description !== "") {
-      const updatedData = {
-        $set: {
-          description: updatedInfo?.description,
-        },
-      };
-      const result = await Products.updateOne(id, updatedData);
-    } 
-    
-    else {
-      const updatedData = {
-        $set: {
-          productName: updatedInfo.productName,
-          description: updatedInfo.description,
-        },
-      };
-      const result = await Products.updateOne(id, updatedData);
+    if(updatedInfo.productName){
+      myUpData.productName = updatedInfo.productName;
     }
+
+    if(updatedInfo.description){
+      myUpData.description = updatedInfo.description;
+    }
+    const updatedData = {$set: myUpData};
+    const result = await Products.updateOne(id, updatedData);
 
     return res.send({
       status: 200,
