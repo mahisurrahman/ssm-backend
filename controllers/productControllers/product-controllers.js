@@ -69,14 +69,14 @@ const showSingleProduct = async (req, res) => {
   try {
     const id = req.params.id;
     const result = await Products.findOne({ _id: id });
-    if(result){
+    if (result) {
       return res.send({
         status: 200,
         error: false,
         message: "Success",
         data: result,
       });
-    } else{
+    } else {
       return res.send({
         status: 404,
         error: true,
@@ -95,25 +95,46 @@ const showSingleProduct = async (req, res) => {
   }
 };
 
-//Update a Product//
-const updateAProduct = async (req, res) => {
+//Update a Product Info//
+const updateAProductInfo = async (req, res) => {
   try {
     const id = req.params.id;
     const updatedInfo = req.body;
-    const updatedData = {
-      $set: {
-        "productName": updatedInfo.productName,
-        "description": updatedInfo.description,
-        "price": updatedInfo.price,
-      }
+
+    if (updatedInfo?.productName !== "") {
+      const updatedData = {
+        $set: {
+          productName: updatedInfo?.productName,
+        },
+      };
+      const result = await Products.updateOne(id, updatedData);
+    } 
+    
+    else if (updatedInfo?.description !== "") {
+      const updatedData = {
+        $set: {
+          description: updatedInfo?.description,
+        },
+      };
+      const result = await Products.updateOne(id, updatedData);
+    } 
+    
+    else {
+      const updatedData = {
+        $set: {
+          productName: updatedInfo.productName,
+          description: updatedInfo.description,
+        },
+      };
+      const result = await Products.updateOne(id, updatedData);
     }
-    const result = await Products.updateOne(id, updatedData);
+
     return res.send({
       status: 200,
       err: false,
       message: "Success",
       data: result,
-    })
+    });
   } catch (err) {
     console.log(err);
     return res.send({
@@ -121,7 +142,35 @@ const updateAProduct = async (req, res) => {
       error: true,
       message: "Internal Server Error",
       data: err,
-    })
+    });
+  }
+};
+
+//Update a Product Price//
+const updateAProductPrice = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const updatedInfo = req.body;
+    const updatedData = {
+      $set: {
+        price: updatedInfo.price,
+      },
+    };
+    const result = await Products.updateOne(id, updatedData);
+    return res.send({
+      status: 200,
+      err: false,
+      message: "Success",
+      data: result,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.send({
+      status: 500,
+      error: true,
+      message: "Internal Server Error",
+      data: err,
+    });
   }
 };
 
@@ -175,5 +224,6 @@ module.exports = {
   removeProduct,
   Products,
   showSingleProduct,
-  updateAProduct,
+  updateAProductInfo,
+  updateAProductPrice,
 };
