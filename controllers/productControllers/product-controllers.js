@@ -1,3 +1,4 @@
+const { ObjectId } = require("mongodb");
 const Products = require("../../models/product-model");
 
 //Create a Single Product//
@@ -26,9 +27,9 @@ const createProducts = async (req, res) => {
     });
     // return res.status(400).json(data);
     return res.send({
-      status: 400,
+      status: 200,
       error: false,
-      message: "Successfully Added",
+      message: "Success",
       data: result,
     });
   } catch (err) {
@@ -45,14 +46,13 @@ const createProducts = async (req, res) => {
 //Show All Products//
 const showProducts = async (req, res) => {
   try {
-    const result = await Products.find()
-    console.log(result);
+    const result = await Products.find({ isDeleted: false });
     return res.send({
       status: 200,
       error: false,
-      message: "All Products Are Shown",
+      message: "Success",
       data: result,
-    })
+    });
   } catch (err) {
     console.error(err);
     return res.send({
@@ -64,7 +64,116 @@ const showProducts = async (req, res) => {
   }
 };
 
-//Delete a Single Product//
+//Show a Single Product//
+const showSingleProduct = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const result = await Products.findOne({ _id: id });
+    if(result){
+      return res.send({
+        status: 200,
+        error: false,
+        message: "Success",
+        data: result,
+      });
+    } else{
+      return res.send({
+        status: 404,
+        error: true,
+        message: "Failed",
+        data: null,
+      });
+    }
+  } catch (err) {
+    console.log(err);
+    return res.send({
+      status: 500,
+      error: true,
+      message: "Internal Server Error",
+      data: err,
+    });
+  }
+};
 
+//Update a Product//
+const updateAProduct = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const updatedInfo = req.body;
+    const updatedData = {
+      $set: {
+        "productName": updatedInfo.productName,
+        "description": updatedInfo.description,
+        "price": updatedInfo.price,
+      }
+    }
+    const result = await Products.updateOne(id, updatedData);
+    return res.send({
+      status: 200,
+      err: false,
+      message: "Success",
+      data: result,
+    })
+  } catch (err) {
+    console.log(err);
+    return res.send({
+      status: 500,
+      error: true,
+      message: "Internal Server Error",
+      data: err,
+    })
+  }
+};
 
-module.exports = { showProducts, createProducts, Products };
+//Remove a Single Product//
+const removeProduct = async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    const deletedAlready = await Products.findOne({ _id: id, isDeleted: true });
+    if (deletedAlready) {
+      return res.send({
+        status: 404,
+        error: true,
+        message: "Product Already Deleted",
+        data: null,
+      });
+    } else {
+      const result = await Products.findOneAndUpdate(
+        { _id: id },
+        {
+          $set: {
+            isDeleted: true,
+            isActive: false,
+            deletedDate: Date.now(),
+          },
+        },
+        { new: true }
+      );
+    }
+
+    return res.send({
+      status: 200,
+      error: false,
+      message: "Success",
+      data: result,
+    });
+  } catch (err) {
+    console.error(err);
+    return res.send({
+      status: 500,
+      error: true,
+      message: "Internal Server Error",
+      data: err,
+    });
+  }
+};
+
+module.exports = {
+  showProducts,
+  createProducts,
+  removeProduct,
+  Products,
+  showSingleProduct,
+  updateAProduct,
+};
