@@ -9,6 +9,9 @@ const routerManager = (app) => {
 
   //Product Routes//
   app.use("/products", productRouter);
+
+  // //Stock Routes//
+  // app.use("/stock", )
 };
 
 

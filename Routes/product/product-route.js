@@ -5,8 +5,8 @@ const {createProducts, showProducts, removeProduct, showSingleProduct, updateAPr
 // router.use('/').post(postProducts);s
 router.post("/crt", createProducts);
 router.get("/src", showProducts);
-router.get('/del/:id', removeProduct);
 router.get('/src/:id', showSingleProduct);
+router.get('/del/:id', removeProduct);
 router.post('/upt/:id', updateAProductInfo);
 router.post('/upt-price/:id', updateAProductPrice)
 

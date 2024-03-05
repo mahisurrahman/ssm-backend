@@ -3,15 +3,15 @@ const mongoose = require("mongoose");
 const productSchema = new mongoose.Schema({
   productName: {
     type: String,
-    require: true,
+    required: true,
   },
   description: {
     type: String,
-    require: true,
+    required: true,
   },
   price: {
     type: Number,
-    require: true,
+    required: true,
   },
   status: {
     type: Boolean,
@@ -27,7 +27,7 @@ const productSchema = new mongoose.Schema({
   },
   createDate: {
     type: Date,
-    defalut: Date.now(),
+    default: new Date(), 
   },
   deleteDate: {
     type: Date,

@@ -1,4 +1,3 @@
-const { ObjectId } = require("mongodb");
 const Products = require("../../models/product-model");
 
 //Create a Single Product//
@@ -8,24 +7,25 @@ const createProducts = async (req, res) => {
       productName,
       description,
       price,
-      status,
-      isActive,
-      isDeletd,
-      createDate,
-      deleteDate,
     } = req.body;
 
+    if(!productName || !description || !price){
+      return res.send({
+        status: 204,
+        error: true,
+        message: "No Input Data for Product Name",
+        data: null,
+      })
+    }
+    
+    
+    let intPrice = parseInt(price, 10);
+    
     let result = await Products.create({
-      productName,
-      description,
-      price,
-      status,
-      isActive,
-      isDeletd,
-      createDate,
-      deleteDate,
+      productName: productName,
+      description: description,
+      price: intPrice,
     });
-    // return res.status(400).json(data);
     return res.send({
       status: 200,
       error: false,
@@ -86,6 +86,50 @@ const showSingleProduct = async (req, res) => {
     }
   } catch (err) {
     console.log(err);
+    return res.send({
+      status: 500,
+      error: true,
+      message: "Internal Server Error",
+      data: err,
+    });
+  }
+};
+
+//Remove a Single Product//
+const removeProduct = async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    const deletedAlready = await Products.findOne({ _id: id, isDeleted: true });
+    if (deletedAlready) {
+      return res.send({
+        status: 404,
+        error: true,
+        message: "Product Already Deleted",
+        data: null,
+      });
+    } else {
+      const result = await Products.findOneAndUpdate(
+        { _id: id },
+        {
+          $set: {
+            isDeleted: true,
+            isActive: false,
+            deletedDate: Date.now(),
+          },
+        },
+        { new: true }
+      );
+    }
+
+    return res.send({
+      status: 200,
+      error: false,
+      message: "Success",
+      data: result,
+    });
+  } catch (err) {
+    console.error(err);
     return res.send({
       status: 500,
       error: true,
@@ -158,49 +202,7 @@ const updateAProductPrice = async (req, res) => {
   }
 };
 
-//Remove a Single Product//
-const removeProduct = async (req, res) => {
-  try {
-    const id = req.params.id;
 
-    const deletedAlready = await Products.findOne({ _id: id, isDeleted: true });
-    if (deletedAlready) {
-      return res.send({
-        status: 404,
-        error: true,
-        message: "Product Already Deleted",
-        data: null,
-      });
-    } else {
-      const result = await Products.findOneAndUpdate(
-        { _id: id },
-        {
-          $set: {
-            isDeleted: true,
-            isActive: false,
-            deletedDate: Date.now(),
-          },
-        },
-        { new: true }
-      );
-    }
-
-    return res.send({
-      status: 200,
-      error: false,
-      message: "Success",
-      data: result,
-    });
-  } catch (err) {
-    console.error(err);
-    return res.send({
-      status: 500,
-      error: true,
-      message: "Internal Server Error",
-      data: err,
-    });
-  }
-};
 
 module.exports = {
   showProducts,
