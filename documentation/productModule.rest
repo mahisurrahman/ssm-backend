@@ -51,7 +51,7 @@ GET http://localhost:8000/products/src HTTP/1.1
 ## Technical Description: This API results in getting a single Product.
 ## _id = 65e6df2158de19098fc83ef3
 
-GET http://localhost:8000/products/src/65e6df2158de19098fc83ef3 HTTP/1.1
+GET http://localhost:8000/products/src/65e6e7ee31d0ae5922cdff64 HTTP/1.1
 
 ##  Usecase: To get a single product
 ##      Note: 
@@ -68,9 +68,9 @@ GET http://localhost:8000/products/src/65e6df2158de19098fc83ef3 HTTP/1.1
 ## Method : Remove one Product
 ## Method Code : 1.1.4
 ## Technical Description: This API results in removing a single product.
-## _id = 65e6df2158de19098fc83ef3
+## _id = 65e6e7ee31d0ae5922cdff64
 
-GET http://localhost:8000/products/del/65e6df2158de19098fc83ef3 HTTP/1.1
+GET http://localhost:8000/products/del/65e6e7ee31d0ae5922cdff64 HTTP/1.1
 
 ## Usecase: To remove a Single Product
 
@@ -88,9 +88,9 @@ GET http://localhost:8000/products/del/65e6df2158de19098fc83ef3 HTTP/1.1
 ## Method : Update one Product's Name and Descripton
 ## Method Code : 1.1.5
 ## Technical Description: This API results in updating product's details. (To be Specific: productName, description).
-## _id = 65e6df2158de19098fc83ef3
+## _id = 65e6e7ee31d0ae5922cdff64
 
-POST http://localhost:8000/products/upt/65e6e3ace207a050e9fd9e9c HTTP/1.1
+POST http://localhost:8000/products/upt/65e6e7ee31d0ae5922cdff64 HTTP/1.1
 Content-Type:application/json
 
 {
@@ -114,12 +114,13 @@ Content-Type:application/json
 ## Method : Update one Product's Price
 ## Method Code : 1.1.6
 ## Technical Description: This API results in updating product's details. (To be Specific: product's Price only).
+## _id = 65e6e7ee31d0ae5922cdff64
 
-POST http://localhost:8000/products/upt-price/65e6df2158de19098fc83ef3 HTTP/1.1
+POST http://localhost:8000/products/upt-price/65e6e7ee31d0ae5922cdff64 HTTP/1.1
 Content-Type:application/json
 
 {
-    "price": 80
+    "price": 100
 }
 
 

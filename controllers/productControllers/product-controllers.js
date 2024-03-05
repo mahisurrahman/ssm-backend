@@ -178,13 +178,14 @@ const updateAProductInfo = async (req, res) => {
 const updateAProductPrice = async (req, res) => {
   try {
     const id = req.params.id;
+    const filter = {_id: id};
     const updatedInfo = req.body;
     const updatedData = {
       $set: {
         price: updatedInfo.price,
       },
     };
-    const result = await Products.updateOne(id, updatedData);
+    const result = await Products.updateOne(filter, updatedData);
     return res.send({
       status: 200,
       err: false,
