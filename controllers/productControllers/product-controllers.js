@@ -3,7 +3,7 @@ const Stocks = require("../../models/stock-model");
 
 //Create a Single Product//
 const createProducts = async (req, res) => {
-  try {
+  try{
     const {
       productName,
       description,
@@ -38,27 +38,20 @@ const createProducts = async (req, res) => {
       });
     }
 
-    //Punching Stock Id to the Product Id
-    const updatedUser={
-        ...result._doc,
-        stockId: resultStock._id,
-    }
-    console.log(updatedUser,"user update");
-    
-
-    const updateProducts = await Products.findByIdAndUpdate(result._id,updatedUser,{new:true});
-
-    console.log(updateProducts,"updateed pro");
+    // //Punching Stock Id to the Product Id
+    // const updatedProductInfo={
+    //     ...result._doc,
+    //     stockId: resultStock._id,
+    // }
+    // const updateProducts = await Products.findByIdAndUpdate(result._id,updatedProductInfo,{new:true});
 
     return res.send({
       status: 200,
       error: false,
       message: "Product and Stock Added",
-      data: {
-        result,
-      }
+      data: null
     });
-  } catch (err) {
+  }catch(err){
     console.error(err);
     return res.send({
       status: 500,
@@ -67,7 +60,19 @@ const createProducts = async (req, res) => {
       data: err,
     });
   }
-};
+}
+  // try {
+    
+  // } catch (err) {
+  //   console.error(err);
+  //   return res.send({
+  //     status: 500,
+  //     error: true,
+  //     message: "Internal Server Error",
+  //     data: err,
+  //   });
+  // }
+// }
 
 //Show All Products//
 const showProducts = async (req, res) => {

@@ -1,4 +1,6 @@
+const { ObjectId } = require("mongodb");
 const Stocks = require("../../models/stock-model");
+const { Products } = require("../productControllers/product-controllers");
 
 //Create Stock//
 const createStock = async (req, res) => {
@@ -68,14 +70,16 @@ const updateStock = async (req, res) => {
 const increaseStock = async (req, res) => {
   try{
       const id = req.params.id;
-      const filter = { productId: id};
       const newStockAmount = req.body.stockQuantity;
-      const updatedData = {
+      const result = await Stocks.find({productId: id});
+      const output = result[0].stockQuantity;
+      console.log(output);
+      const updatedData = await Stocks.updateOne({
         $set: {
-          stockQuantity: stockQuantity + newStockAmount
+          stockQuantity: output + newStockAmount
         },
-      };
-      const result = await Stocks.updateOne(filter, updatedData);
+      });
+
       return res.send({
         status: 200,
         err: false,
@@ -83,6 +87,7 @@ const increaseStock = async (req, res) => {
         data: result,
       })
   }catch(err){
+    console.log(err)
     return res.send({
         stauts: 500,
         error: true, 
@@ -98,12 +103,12 @@ const decreaseStock = async (req, res) => {
       const id = req.params.id;
       const filter = { productId: id};
       const newStockAmount = req.body.stockQuantity;
+      const result = await Stocks.updateOne(filter, updatedData);
       const updatedData = {
         $set: {
-          stockQuantity: stockQuantity - newStockAmount
+          stockQuantity: result.stockQuantity - newStockAmount
         },
       };
-      const result = await Stocks.updateOne(filter, updatedData);
       return res.send({
         status: 200,
         err: false,
