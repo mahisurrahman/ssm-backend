@@ -1,6 +1,7 @@
 
 const mainRouter = require ('../Routes/main/main-route.js');
 const productRouter = require ('../Routes/product/product-route.js');
+const stockRouter = require('../Routes/stock/stock-route.js');
 
 const routerManager = (app) => {
 
@@ -10,8 +11,8 @@ const routerManager = (app) => {
   //Product Routes//
   app.use("/products", productRouter);
 
-  // //Stock Routes//
-  // app.use("/stock", )
+  //Stock Routes//
+  app.use("/stocks", stockRouter);
 };
 
 

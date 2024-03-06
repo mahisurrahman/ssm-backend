@@ -1,4 +1,5 @@
 const Products = require("../../models/product-model");
+const Stocks = require("../../models/stock-model");
 
 //Create a Single Product//
 const createProducts = async (req, res) => {
@@ -7,30 +8,43 @@ const createProducts = async (req, res) => {
       productName,
       description,
       price,
+      stockQuantity
     } = req.body;
 
     if(!productName || !description || !price){
       return res.send({
         status: 204,
         error: true,
-        message: "No Input Data for Product Name",
+        message: "Input Missing",
         data: null,
       })
     }
-    
-    
-    let intPrice = parseInt(price, 10);
-    
+    let intPrice = parseInt(price);
+    let stockValue = stockQuantity ? parseInt(stockQuantity, 10) : 0;
+
     let result = await Products.create({
       productName: productName,
       description: description,
       price: intPrice,
     });
+    let resultStock = null;
+    let outputData = {};
+
+    if(result){
+      resultStock = await Stocks.create({
+        productId: result._id,
+        stockQuantity: stockValue,
+      });
+      console.log(resultStock)
+      outputData.product = result;
+      outputData.stk = resultStock;
+    }
+
     return res.send({
       status: 200,
       error: false,
       message: "Success",
-      data: result,
+      data: outputData,
     });
   } catch (err) {
     console.error(err);
