@@ -31,17 +31,24 @@ const createProducts = async (req, res) => {
 
     //Creating Stock While Creating Product//
     let resultStock = null;
-    // let outputData = {};
-
     if(result){
       resultStock = await Stocks.create({
         productId: result._id,
         stockQuantity: stockValue,
       });
-      // console.log(resultStock)
-      // outputData.product = result;
-      // outputData.stk = resultStock;
     }
+
+    //Punching Stock Id to the Product Id
+    const updatedUser={
+        ...result._doc,
+        stockId: resultStock._id,
+    }
+    console.log(updatedUser,"user update");
+    
+
+    const updateProducts = await Products.findByIdAndUpdate(result._id,updatedUser,{new:true});
+
+    console.log(updateProducts,"updateed pro");
 
     return res.send({
       status: 200,

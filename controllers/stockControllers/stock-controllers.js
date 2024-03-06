@@ -35,24 +35,24 @@ const createStock = async (req, res) => {
   }
 };
 
-//Update Stock//
+//Update A Single Product Stock//
 const updateStock = async (req, res) => {
   try {
     const id = req.params.id;
-    const filter = { _id: id };
-    const newStockAmount = req.body;
+    const filter = { productId: id };
+    const newStockAmount = req.body.stockQuantity;
     const updatedData = {
-            $set: {
-                stock: newStockAmount,
-            },
-        };
+      $set: {
+        stockQuantity: newStockAmount,
+      },
+    };
     const result = await Stocks.updateOne(filter, updatedData);
     return res.send({
-        status: 200,
-        err: false,
-        message: 'success',
-        data: result,
-    })
+      status: 200,
+      err: false,
+      message: "success",
+      data: result,
+    });
   } catch (err) {
     console.log(err);
     return res.send({
@@ -64,6 +64,60 @@ const updateStock = async (req, res) => {
   }
 };
 
-//Delete Stock//
+//Update Stock by Adding Value//
+const increaseStock = async (req, res) => {
+  try{
+      const id = req.params.id;
+      const filter = { productId: id};
+      const newStockAmount = req.body.stockQuantity;
+      const updatedData = {
+        $set: {
+          stockQuantity: stockQuantity + newStockAmount
+        },
+      };
+      const result = await Stocks.updateOne(filter, updatedData);
+      return res.send({
+        status: 200,
+        err: false,
+        message: "Success",
+        data: result,
+      })
+  }catch(err){
+    return res.send({
+        stauts: 500,
+        error: true, 
+        message: "Internal Server Error",
+        data: err,
+    })
+  }
+};
 
-module.exports = { createStock, updateStock };
+//Update Stock by Reducing Value//
+const decreaseStock = async (req, res) => {
+  try{
+      const id = req.params.id;
+      const filter = { productId: id};
+      const newStockAmount = req.body.stockQuantity;
+      const updatedData = {
+        $set: {
+          stockQuantity: stockQuantity - newStockAmount
+        },
+      };
+      const result = await Stocks.updateOne(filter, updatedData);
+      return res.send({
+        status: 200,
+        err: false,
+        message: "Success",
+        data: result,
+      })
+  }catch(err){
+    return res.send({
+        stauts: 500,
+        error: true, 
+        message: "Internal Server Error",
+        data: err,
+    })
+  }
+};
+
+module.exports = { createStock, updateStock, increaseStock, decreaseStock };

@@ -9,6 +9,10 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  stockId:{
+    type:String,
+    // required:true,
+  },
   price: {
     type: Number,
     required: true,
