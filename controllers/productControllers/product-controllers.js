@@ -20,31 +20,36 @@ const createProducts = async (req, res) => {
       })
     }
     let intPrice = parseInt(price);
-    let stockValue = stockQuantity ? parseInt(stockQuantity, 10) : 0;
+    let stockValue = stockQuantity ? parseInt(stockQuantity) : 0;
 
+    //Creating Product on the Database//
     let result = await Products.create({
       productName: productName,
       description: description,
       price: intPrice,
     });
+
+    //Creating Stock While Creating Product//
     let resultStock = null;
-    let outputData = {};
+    // let outputData = {};
 
     if(result){
       resultStock = await Stocks.create({
         productId: result._id,
         stockQuantity: stockValue,
       });
-      console.log(resultStock)
-      outputData.product = result;
-      outputData.stk = resultStock;
+      // console.log(resultStock)
+      // outputData.product = result;
+      // outputData.stk = resultStock;
     }
 
     return res.send({
       status: 200,
       error: false,
-      message: "Success",
-      data: outputData,
+      message: "Product and Stock Added",
+      data: {
+        result,
+      }
     });
   } catch (err) {
     console.error(err);
