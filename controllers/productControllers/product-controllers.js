@@ -11,7 +11,7 @@ const createProducts = async (req, res) => {
       stockQuantity
     } = req.body;
 
-    if(!productName || !description || !price){
+    if(!productName || !description || !price){b
       return res.send({
         status: 204,
         error: true,
@@ -37,14 +37,6 @@ const createProducts = async (req, res) => {
         stockQuantity: stockValue,
       });
     }
-
-    // //Punching Stock Id to the Product Id
-    // const updatedProductInfo={
-    //     ...result._doc,
-    //     stockId: resultStock._id,
-    // }
-    // const updateProducts = await Products.findByIdAndUpdate(result._id,updatedProductInfo,{new:true});
-
     return res.send({
       status: 200,
       error: false,
@@ -61,18 +53,6 @@ const createProducts = async (req, res) => {
     });
   }
 }
-  // try {
-    
-  // } catch (err) {
-  //   console.error(err);
-  //   return res.send({
-  //     status: 500,
-  //     error: true,
-  //     message: "Internal Server Error",
-  //     data: err,
-  //   });
-  // }
-// }
 
 //Show All Products//
 const showProducts = async (req, res) => {
