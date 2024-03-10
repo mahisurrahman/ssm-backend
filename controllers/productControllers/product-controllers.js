@@ -11,7 +11,7 @@ const createProducts = async (req, res) => {
       stockQuantity
     } = req.body;
 
-    if(!productName || !description || !price){b
+    if(!productName || !description || !price){
       return res.send({
         status: 204,
         error: true,
@@ -36,13 +36,21 @@ const createProducts = async (req, res) => {
         productId: result._id,
         stockQuantity: stockValue,
       });
+      return res.send({
+        status: 200,
+        error: false,
+        message: "Product and Stock Added",
+        data: null
+      });
+    }else{
+      return res.send({
+        status: 400,
+        error: true,
+        message: "Stock wasn't added",
+        data: null,
+      })
     }
-    return res.send({
-      status: 200,
-      error: false,
-      message: "Product and Stock Added",
-      data: null
-    });
+    
   }catch(err){
     console.error(err);
     return res.send({
@@ -79,7 +87,7 @@ const showProducts = async (req, res) => {
 const showSingleProduct = async (req, res) => {
   try {
     const id = req.params.id;
-    const result = await Products.findOne({ _id: id });
+    const result = await Products.findById({ _id: id });
     if (result) {
       return res.send({
         status: 200,
@@ -110,16 +118,15 @@ const showSingleProduct = async (req, res) => {
 const removeProduct = async (req, res) => {
   try {
     const id = req.params.id;
-
-    const deletedAlready = await Products.findOne({ _id: id, isDeleted: true });
-    if (deletedAlready) {
-      return res.send({
-        status: 404,
-        error: true,
-        message: "Product Already Deleted",
-        data: null,
-      });
-    } else {
+    // const deletedAlready = await Products.findOne({ _id: id, isDeleted: true });
+    // if (deletedAlready) {
+    //   return res.send({
+    //     status: 404,
+    //     error: true,
+    //     message: "Product Already Deleted",
+    //     data: null,
+    //   });
+    // } else {
       const result = await Products.findOneAndUpdate(
         { _id: id },
         {
@@ -131,7 +138,7 @@ const removeProduct = async (req, res) => {
         },
         { new: true }
       );
-    }
+    // }
 
     return res.send({
       status: 200,
@@ -213,8 +220,6 @@ const updateAProductPrice = async (req, res) => {
     });
   }
 };
-
-
 
 module.exports = {
   showProducts,

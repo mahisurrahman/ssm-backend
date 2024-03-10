@@ -1,4 +1,4 @@
-require('dotenv').config();
+// require('dotenv').config();
 const express = require('express');
 const routerManager = require('./routerManager/routerManager');
 const app = express();
@@ -18,5 +18,6 @@ connectToDb().then(()=>{
         console.log(`Server Running on port ${port}`);
     })
 })
+.catch((err)=>{console.log(err)});
 
 

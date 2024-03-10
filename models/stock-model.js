@@ -9,7 +9,7 @@ const stockSchema = new mongoose.Schema({
 
   stockQuantity: {
     type: Number,
-    required: true,
+    // required: true,
   },
 
   status: {

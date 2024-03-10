@@ -6,7 +6,7 @@ const { createStock, updateStock, increaseStock, decreaseStock, showStock, showS
 //Routes//
 router.post('/crt/:id', createStock);
 router.post('/upt/:id', updateStock);
-router.post('/upt-add/:id', increaseStock);
+router.post('/upt-incr/:id', increaseStock);
 router.post('/upt-dec/:id', decreaseStock);
 router.get('/src', showStock);
 router.get('/src/:id', showSingleStock);

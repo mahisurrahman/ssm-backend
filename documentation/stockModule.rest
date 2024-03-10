@@ -1,0 +1,155 @@
+##########################################
+####          Stock Module            ####
+##########################################
+
+## Module Code: 2.1
+## Module Name: Stock
+## Method: Create Stock
+## Method Code: 2.1.1
+## Technical Description: This API results in creation of sttocks of a particular product by passing the Product's Id, and Stock Quantity.
+##productId = ObjectId('65e964f96f1ddc6db83317a2');
+
+POST http://localhost:8000/stocks/crt/65e964f96f1ddc6db83317a2 HTTP/1.1
+Content-Type: application/json
+
+{
+    "stockQuantity": 20
+}
+
+##      UseCase: To create stocks for a Particular  Product
+##           Note: If the product already has a stock created? It will throw an error.
+
+
+
+#################################################################################
+
+
+###
+## Module Code: 2.1
+## Module Name: Stock
+## Method: Update Stock
+## Method Code: 2.1.2
+## Technical Description:  Update Stock's Quantity Manually
+## productId = ObjectId('65e964f96f1ddc6db83317a2');
+
+POST http://localhost:8000/stocks/upt/65e964f96f1ddc6db83317a2 HTTP/1.1
+Content-Type: application/json
+
+{
+    "stockQuantity": 1200
+}
+
+##      Usecase: To Update a Single Product's Stock directly from Backend.
+##          Note:
+##              -Ensure: This API is only for updating stock values directly, without increasing or decreasing. 
+
+
+
+#################################################################################
+
+
+###
+## Module Code: 2.1
+## Module Name: Stock
+## Method: Increase Stock Quantity
+## Method Code: 2.1.3
+## Technical Description: Increase the Stock Quantity when the products gets in the inventory
+## productId = ObjectId('65e964f96f1ddc6db83317a2');
+
+POST http://localhost:8000/stocks/upt-incr/65e964f96f1ddc6db83317a2 HTTP/1.1
+Content-Type: application/json
+
+{
+    "stockQuantity": 5
+}
+
+##      Usecase: To Increase a Single Product's Stock Automatically when products enters the inventory.
+##          Note:
+
+
+
+#################################################################################
+
+
+###
+## Module Code: 2.1
+## Module Name: Stock
+## Method: Decrease Stock Quantity
+## Method Code: 2.1.4
+## Technical Description: Decrease the Stock Quantity when the products gets out of the inventory (or sold)
+## productId = ObjectId('65e964f96f1ddc6db83317a2');
+
+POST http://localhost:8000/stocks/upt-dec/65e964f96f1ddc6db83317a2 HTTP/1.1
+Content-Type: application/json
+
+{
+    "stockQuantity": 100
+}
+
+##      Usecase: To Increase a Single Product's Stock Automatically when products enters the inventory.
+##          Note:
+
+
+
+#################################################################################
+
+
+###
+## Module Code: 2.1
+## Module Name: Stock
+## Method: Decrease Stock Quantity
+## Method Code: 2.1.4
+## Technical Description: Decrease the Stock Quantity when the products gets out of the inventory (or sold)
+## productId = ObjectId('65e964f96f1ddc6db83317a2');
+
+POST http://localhost:8000/stocks/upt-dec/65e964f96f1ddc6db83317a2 HTTP/1.1
+Content-Type: application/json
+
+{
+    "stockQuantity": 100
+}
+
+##      Usecase: To Increase a Single Product's Stock Automatically when products enters the inventory.
+##          Note:
+
+
+
+#################################################################################
+
+
+
+###
+## Module COde: 2.1
+## Module Name: Stock
+## Method: Show All Stocks
+## Method Code: 2.1.5
+## Technical Description: With this API you can directly see all the stocks at once. 
+
+
+GET http://localhost:8000/stocks/src HTTP/1.1
+
+
+##         UseCase: To get all the Stocks
+##              Note:
+
+
+
+#################################################################################
+
+
+
+###
+## Module Code: 2.1
+## Module Name: Stock
+## Method: Soft Delete Stock Data (isDeleted: true)
+## Method Code: 2.1.6
+## Technical Description :  With this API you can delete any product's stock.
+## productId = ObjectId('65e964f96f1ddc6db83317a2');
+
+
+GET http://localhost:8000/stocks/del/65e964f96f1ddc6db83317a2 HTTP/1.1
+
+
+##          UseCase: Suppose, you need to remove junk stocks data of a product from your inventory, 
+##                      then here comes the API for it. 
+##              Note:
