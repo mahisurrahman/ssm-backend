@@ -52,32 +52,10 @@ const increaseStock = async (req, res) => {
 //Update Stock by Reducing Value//
 const decreaseStock = async (req, res) => {
   try {
-    const id = req.params.id;
-    const newStockAmount = req.body.stockQuantity;
-    const result = await Stocks.find({ productId: id });
-    const output = result[0].stockQuantity;
-    const updatedData = await Stocks.updateOne({
-      $set: {
-        stockQuantity: output - newStockAmount,
-      },
-    });
-
-    if (result && updatedData) {
-      return res.send({
-        status: 200,
-        error: false,
-        message: "Success",
-        data: result,
-      });
-    } else {
-      return res.send({
-        status: 404,
-        error: true,
-        message: "Failed",
-        data: null,
-      });
-    }
+    const response = await stockServices.stockDecrease(req.body.stockQuantity, req.params);
+    return res.send(response);
   } catch (err) {
+    console.log(err);
     return res.send({
       stauts: 500,
       error: true,
@@ -90,25 +68,10 @@ const decreaseStock = async (req, res) => {
 //Show all Stock Values//
 const showStock = async (req, res) => {
   try {
-    const result = await Stocks.find({
-      isDeleted: false,
-    });
-    if (result) {
-      return res.send({
-        status: 200,
-        error: false,
-        message: "Success",
-        data: result,
-      });
-    } else {
-      return res.send({
-        status: 404,
-        error: true,
-        message: "Failed",
-        data: null,
-      });
-    }
+    const response = await stockServices.displayStock();
+    return res.send(response);
   } catch (err) {
+    console.log(err);
     return res.send({
       stauts: 500,
       error: true,
@@ -121,26 +84,8 @@ const showStock = async (req, res) => {
 //Show single Stock Values//
 const showSingleStock = async (req, res) => {
   try {
-    const id = req.params.id;
-    const productId = await Stocks.find({
-      productId: id,
-      isDeleted: false,
-    });
-    if (productId && productId.length !== 0) {
-      return res.send({
-        status: 200,
-        error: false,
-        message: "Success",
-        data: productId,
-      });
-    } else {
-      return res.send({
-        status: 404,
-        error: true,
-        message: "Data not found",
-        data: null,
-      });
-    }
+    const response = await stockServices.displaySingleStock(req.params);
+    return res.send(response);
   } catch (err) {
     console.log(err);
     return res.send({
@@ -155,33 +100,8 @@ const showSingleStock = async (req, res) => {
 //Delete Single Stock Values//
 const removeStock = async (req, res) => {
   try {
-    const id = req.params.id;
-    const productDetails = await Stocks.findOneAndUpdate(
-      { productId: id, isDeleted: false },
-      {
-        $set: {
-          isDeleted: true,
-          isActive: false,
-          deletedDate: Date.now(),
-        },
-      },
-      { new: true }
-    );
-
-    if (productDetails) {
-      return res.send({
-        status: 200,
-        error: false,
-        message: "Success",
-        data: null,
-      });
-    } else {
-      return res.status(404).send({
-        error: true,
-        message: "Stock not found or already deleted",
-        data: null,
-      });
-    }
+    const response = await stockServices.removeSingleStock(req.params);
+    return res.send(response);
   } catch (err) {
     return res.status(500).send({
       error: true,
