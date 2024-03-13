@@ -8,6 +8,6 @@ router.get("/src", showProducts);
 router.get('/src/:id', showSingleProduct);
 router.get('/del/:id', removeProduct);
 router.post('/upt/:id', updateAProductInfo);
-router.post('/upt-price/:id', updateAProductPrice)
+router.post('/upt/price/:id', updateAProductPrice)
 
 module.exports = router;
