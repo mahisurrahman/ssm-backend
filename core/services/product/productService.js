@@ -79,6 +79,7 @@ const showAllProducts = async () => {
 //Show Single Product//
 const showSingleProd = async (data) => {
   try {
+    console.log(data.params.id);
     const prodId = data.params.id;
     const result = await Products.findOne({ _id: prodId, isDeleted: false });
     if (result) {

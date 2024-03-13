@@ -41,6 +41,22 @@ describe("Product Service", () => {
   //   });
   // });
 
+  //Show Single Product//
+  describe("Show Single Product", () => {
+    it("Should return an array of a single product details", async function () {
+      this.timeout(15000);
 
-  
+      const data = {
+        params: {
+          id: "65eec05739b37a7f422be600",
+        },
+      };
+
+      const response = await productServices.showSingleProd(data);
+      console.log(response);
+
+      expect(response.status).to.equal(200);
+      expect(response.error).to.be.false;
+    });
+  });
 });
