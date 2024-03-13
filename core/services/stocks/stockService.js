@@ -28,7 +28,7 @@ const stockCreation = async (data) => {
     } else {
       const result = await Stocks.create({
         productId: prodId,
-        stockQuantity: stockQuantity,
+        stockQuantity: stockValue,
       });
       if (result) {
         return {

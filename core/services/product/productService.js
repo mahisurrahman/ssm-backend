@@ -50,7 +50,7 @@ const productCreation = async (data) => {
       status: 500,
       error: true,
       message: "Internal Server Error",
-      data: err,
+      data: error,
     };
   }
 };
