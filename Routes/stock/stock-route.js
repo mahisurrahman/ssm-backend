@@ -4,7 +4,7 @@ const router = express.Router();
 const { createStock, updateStock, increaseStock, decreaseStock, showStock, showSingleStock, removeStock } = require('../../controllers/stockControllers/stock-controllers');
 
 //Routes//
-router.post('/crt/:id', createStock);
+router.post('/crt', createStock);
 router.post('/upt/:id', updateStock);
 router.post('/upt-incr/:id', increaseStock);
 router.post('/upt-dec/:id', decreaseStock);

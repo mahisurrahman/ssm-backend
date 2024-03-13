@@ -1,54 +1,11 @@
-const { ObjectId } = require("mongodb");
-const Stocks = require("../../models/stock-model");
-const { Products } = require("../productControllers/product-controllers");
+const stockServices = require ('../../core/services/stocks/stockService.js');
 
 //Create Stock//
 const createStock = async (req, res) => {
   try {
-    let data = req.body;
-    const productId = req.params.id;
-    if (!data.stockQuantity || !productId) {
-      return res.send({
-        satus: 204,
-        error: true,
-        message: "Input Missing",
-        data: null,
-      });
-    }
-    let stockValue = parseInt(data.stockQuantity);
-    const existsData = await Stocks.findOne({
-      productId: productId,
-      isDeleted: false,
-    });
-
-    if (existsData) {
-      return res.send({
-        status: 400,
-        error: true,
-        message: "Bad request",
-        data: null,
-      });
-    } else {
-      const result = await Stocks.create({
-        productId: productId,
-        stockQuantity: stockValue,
-      });
-      if (result) {
-        return res.send({
-          status: 200,
-          error: false,
-          message: "Success",
-          data: result,
-        });
-      } else {
-        return res.send({
-          status: 404,
-          error: true,
-          message: "Failed",
-          data: null,
-        });
-      }
-    }
+    const data = req.body;
+    const response = await stockServices.stockCreation(data);
+    return res.send({response});
   } catch (err) {
     console.error(err);
     return res.send({
@@ -63,34 +20,8 @@ const createStock = async (req, res) => {
 // Update A Single Product Stock//
 const updateStock = async (req, res) => {
   try {
-    const id = req.params.id;
-    const newStockAmount = req.body.stockQuantity;
-    const result = await Stocks.findOneAndUpdate(
-      {
-        productId: id,
-        isDeleted: false,
-      },
-      {
-        $set: {
-          stockQuantity: newStockAmount,
-        },
-      }
-    );
-    if (result) {
-      return res.send({
-        status: 200,
-        error: false,
-        message: "Success",
-        data: true,
-      });
-    } else {
-      return res.send({
-        status: 404,
-        error: true,
-        message: "Failed",
-        data: null,
-      });
-    }
+    const response = await stockServices.stockUpdate(req.body, req.params);
+    return res.send(response);
   } catch (err) {
     console.log(err);
     return res.send({
@@ -105,32 +36,8 @@ const updateStock = async (req, res) => {
 //Update Stock by Adding Value//
 const increaseStock = async (req, res) => {
   try {
-    const id = req.params.id;
-    const newStockAmount = req.body.stockQuantity;
-    const result = await Stocks.find({ productId: id, isDeleted: false });
-    const output = result[0].stockQuantity;
-    console.log(output);
-    const updatedData = await Stocks.updateOne({
-      $set: {
-        stockQuantity: output + newStockAmount,
-      },
-    });
-    console.log(updatedData);
-    if (result && updatedData) {
-      return res.send({
-        status: 200,
-        error: false,
-        message: "Success",
-        data: true,
-      });
-    } else {
-      return res.send({
-        status: 404,
-        error: true,
-        message: "Failed",
-        data: null,
-      });
-    }
+    const response = await stockServices.stockIncrease(req.body.stockQuantity, req.params);
+    return res.send(response);
   } catch (err) {
     console.log(err);
     return res.send({
