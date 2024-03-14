@@ -65,13 +65,13 @@ const showAllProducts = async () => {
       message: "Success",
       data: result,
     };
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     return {
       status: 500,
       error: true,
       message: "Internal Server Error",
-      data: err,
+      data: error,
     };
   }
 };
@@ -97,12 +97,12 @@ const showSingleProd = async (data) => {
         data: null,
       };
     }
-  } catch (err) {
+  } catch (error) {
     return {
       status: 500,
       error: true,
       message: "Internal Server Error",
-      data: err,
+      data: error,
     };
   }
 };
@@ -128,13 +128,13 @@ const removeSingleProd = async (data) => {
       message: "Success",
       data: result,
     };
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    console.log(error);
     return {
       status: 500,
       error: true,
       message: "Internal Server Error",
-      data: err,
+      data: error,
     };
   }
 };
@@ -157,17 +157,17 @@ const updateSingleProd = async (uptInfo, prodId) => {
 
     return {
       status: 200,
-      err: false,
+      error: false,
       message: "Success",
       data: result,
     };
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     return {
       status: 500,
       error: true,
       message: "Internal Server Error",
-      data: err,
+      data: error,
     };
   }
 };
@@ -186,17 +186,17 @@ const updatePriceOfAProd = async (uptInfo, prodId) => {
     const result = await Products.updateOne(filter, updatedData);
     return{
       status: 200,
-      err: false,
+      error: false,
       message: "Success",
       data: result,
     };
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     return{
       status: 500,
       error: true,
       message: "Internal Server Error",
-      data: err,
+      data: error,
     };
   }
 };

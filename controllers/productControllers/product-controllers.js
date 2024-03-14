@@ -5,13 +5,13 @@ const createProducts = async (req, res) => {
   try {
     const response = await productServices.productCreation(req.body);
     return res.send({ response });
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    console.log(error);
     return res.send({
       status: 500,
       error: true,
       message: "Internal Server Error",
-      data: err,
+      data: error,
     });
   }
 };
@@ -21,13 +21,13 @@ const showProducts = async (req, res) => {
   try {
     const response = await productServices.showAllProducts();
     return res.send({ response });
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    console.error(error);
     return res.send({
       status: 500,
       error: true,
       message: "Internal Server Error",
-      data: err,
+      data: error,
     });
   }
 };
@@ -37,13 +37,13 @@ const showSingleProduct = async (req, res) => {
   try {
     const response = await productServices.showSingleProd(req);
     return res.send({ response });
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     return res.send({
       status: 500,
       error: true,
       message: "Internal Server Error",
-      data: err,
+      data: error,
     });
   }
 };
@@ -53,13 +53,13 @@ const removeProduct = async (req, res) => {
   try {
     const response = await productServices.removeSingleProd(req);
     return res.send({ response });
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    console.error(error);
     return res.send({
       status: 500,
       error: true,
       message: "Internal Server Error",
-      data: err,
+      data: error,
     });
   }
 };
@@ -71,13 +71,13 @@ const updateAProductInfo = async (req, res) => {
     const prodId = req.params.id;
     const response = await productServices.updateSingleProd(uptInfo, prodId);
     return res.send({ response });
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     return res.send({
       status: 500,
       error: true,
       message: "Internal Server Error",
-      data: err,
+      data: error,
     });
   }
 };
@@ -89,13 +89,13 @@ const updateAProductPrice = async (req, res) => {
     const uptInfo = req.body;
     const response = await productServices.updatePriceOfAProd(uptInfo, prodId);
     return res.send({response});
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     return res.send({
       status: 500,
       error: true,
       message: "Internal Server Error",
-      data: err,
+      data: error,
     });
   }
 };
