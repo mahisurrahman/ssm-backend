@@ -6,13 +6,13 @@ const createStock = async (req, res) => {
     const data = req.body;
     const response = await stockServices.stockCreation(data);
     return res.send({response});
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    console.error(error);
     return res.send({
       status: 500,
       error: true,
       message: "Internal Server Error",
-      data: err,
+      data: error,
     });
   }
 };
@@ -22,13 +22,13 @@ const updateStock = async (req, res) => {
   try {
     const response = await stockServices.stockUpdate(req.body, req.params);
     return res.send(response);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     return res.send({
       status: 500,
       error: true,
       message: "Internal Server Error",
-      data: err,
+      data: error,
     });
   }
 };
@@ -38,13 +38,13 @@ const increaseStock = async (req, res) => {
   try {
     const response = await stockServices.stockIncrease(req.body.stockQuantity, req.params);
     return res.send(response);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     return res.send({
       stauts: 500,
       error: true,
       message: "Internal Server Error",
-      data: err,
+      data: error,
     });
   }
 };
@@ -54,13 +54,13 @@ const decreaseStock = async (req, res) => {
   try {
     const response = await stockServices.stockDecrease(req.body.stockQuantity, req.params);
     return res.send(response);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     return res.send({
       stauts: 500,
       error: true,
       message: "Internal Server Error",
-      data: err,
+      data: error,
     });
   }
 };
@@ -70,13 +70,13 @@ const showStock = async (req, res) => {
   try {
     const response = await stockServices.displayStock();
     return res.send(response);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     return res.send({
       stauts: 500,
       error: true,
       message: "Internal Server Error",
-      data: err,
+      data: error,
     });
   }
 };
@@ -86,13 +86,13 @@ const showSingleStock = async (req, res) => {
   try {
     const response = await stockServices.displaySingleStock(req.params);
     return res.send(response);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     return res.send({
       status: 500,
       error: true,
       message: "Internal Server Error",
-      data: null,
+      data: error,
     });
   }
 };
@@ -102,11 +102,12 @@ const removeStock = async (req, res) => {
   try {
     const response = await stockServices.removeSingleStock(req.params);
     return res.send(response);
-  } catch (err) {
+  } catch (error) {
+    console.log(error)
     return res.status(500).send({
       error: true,
       message: "Internal Server Error",
-      data: err,
+      data: error,
     });
   }
 };

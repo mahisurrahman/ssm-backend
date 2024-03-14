@@ -22,7 +22,7 @@ const stockCreation = async (data) => {
       return {
         status: 400,
         error: true,
-        message: "Bad request",
+        message: "Stock Already Exists",
         data: null,
       };
     } else {
@@ -46,13 +46,13 @@ const stockCreation = async (data) => {
         };
       }
     }
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    console.log(error);
     return {
       status: 500,
       error: true,
       message: "Internal Server Error",
-      data: err,
+      data: error,
     };
   }
 };
@@ -88,13 +88,13 @@ const stockUpdate = async (body, prodId) => {
         data: null,
       };
     }
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     return {
       status: 500,
       error: true,
       message: "Internal Server Error",
-      data: err,
+      data: error,
     };
   }
 };
@@ -130,13 +130,13 @@ const stockIncrease = async (data, prodId) => {
         data: null,
       };
     }
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     return {
       status: 500,
       error: true,
       message: "Internal Server Error",
-      data: err,
+      data: error,
     };
   }
 };
@@ -172,13 +172,13 @@ const stockDecrease = async (data, prodId) => {
         data: null,
       };
     }
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     return {
       status: 500,
       error: true,
       message: "Internal Server Error",
-      data: err,
+      data: error,
     };
   }
 };
@@ -204,13 +204,13 @@ const displayStock = async () => {
         data: null,
       };
     }
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     return {
       stauts: 500,
       error: true,
       message: "Internal Server Error",
-      data: err,
+      data: error,
     };
   }
 };
@@ -238,13 +238,13 @@ const displaySingleStock = async (prodId) => {
         data: null,
       };
     }
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     return {
       stauts: 500,
       error: true,
       message: "Internal Server Error",
-      data: err,
+      data: error,
     };
   }
 };
@@ -278,13 +278,13 @@ const removeSingleStock = async (prodId) => {
         data: null,
       };
     }
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     return{
       stauts: 500,
       error: true,
       message: "Internal Server Error",
-      data: err,
+      data: error,
     };
   }
 };

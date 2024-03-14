@@ -1,5 +1,4 @@
 const productServices = require("../core/services/product/productService");
-const stockServices = require("../core/services/stocks/stockService");
 const app = require("../index");
 
 const chai = require("chai");
@@ -22,6 +21,7 @@ describe("Product Service", () => {
       };
       const response = await productServices.productCreation(data);
       console.log(response);
+
       expect(response.status).to.equal(200);
       expect(response.error).to.be.false;
     });
