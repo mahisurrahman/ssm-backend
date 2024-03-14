@@ -13,6 +13,8 @@ describe("Product Service", () => {
   describe("Products Creation", () => {
     it("Should create a product and also create a stock for that product, and return the data as an array", async function () {
       this.timeout(15000);
+
+
       const data = {
         productName: "tSTP",
         description: "DES",
@@ -35,6 +37,7 @@ describe("Product Service", () => {
       this.timeout(15000);
       const response = await productServices.showAllProducts();
       console.log(response);
+
       expect(response.status).to.equal(200);
       expect(response.error).to.be.false;
     });
@@ -52,6 +55,7 @@ describe("Product Service", () => {
       };
       const response = await productServices.showSingleProd(data);
       console.log(response);
+      
       expect(response.status).to.equal(200);
       expect(response.error).to.be.false;
     });

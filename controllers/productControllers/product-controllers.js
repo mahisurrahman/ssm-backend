@@ -3,6 +3,7 @@ const productServices = require("../../core/services/product/productService.js")
 //Create a Single Product//
 const createProducts = async (req, res) => {
   try {
+    
     const response = await productServices.productCreation(req.body);
     return res.send({ response });
   } catch (error) {
