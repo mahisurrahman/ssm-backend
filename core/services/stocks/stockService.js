@@ -144,7 +144,7 @@ const stockIncrease = async (data, prodId) => {
 //Stcok Descreasing//
 const stockDecrease = async (data, prodId) => {
   try {
-    const id = prodId.id;
+    const id = prodId;
     const newStockAmount = data;
     const result = await Stocks.findOne({ productId: id, isDeleted: false });
     const updatedData = await Stocks.updateOne(
@@ -265,14 +265,14 @@ const removeSingleStock = async (prodId) => {
       { new: true }
     );
     if (productDetails) {
-      return{
+      return {
         status: 200,
         error: false,
         message: "Success",
         data: null,
       };
     } else {
-      return{
+      return {
         error: true,
         message: "Stock not found or already deleted",
         data: null,
@@ -280,7 +280,7 @@ const removeSingleStock = async (prodId) => {
     }
   } catch (error) {
     console.log(error);
-    return{
+    return {
       stauts: 500,
       error: true,
       message: "Internal Server Error",
@@ -296,5 +296,5 @@ module.exports = {
   stockDecrease,
   displayStock,
   displaySingleStock,
-  removeSingleStock
+  removeSingleStock,
 };

@@ -184,7 +184,7 @@ const updatePriceOfAProd = async (uptInfo, prodId) => {
       },
     };
     const result = await Products.updateOne(filter, updatedData);
-    return{
+    return {
       status: 200,
       error: false,
       message: "Success",
@@ -192,7 +192,7 @@ const updatePriceOfAProd = async (uptInfo, prodId) => {
     };
   } catch (error) {
     console.log(error);
-    return{
+    return {
       status: 500,
       error: true,
       message: "Internal Server Error",
