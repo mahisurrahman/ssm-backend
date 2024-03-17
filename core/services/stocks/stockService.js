@@ -145,30 +145,50 @@ const stockIncrease = async (data, prodId) => {
 const stockDecrease = async (data, prodId) => {
   try {
     const id = prodId;
-    const newStockAmount = data;
+    const newStockAmount = Math.abs(data); //Even if User gives a negative value, it will convert into absolute value//
     const result = await Stocks.findOne({ productId: id, isDeleted: false });
-    const updatedData = await Stocks.updateOne(
-      {
-        productId: id,
-      },
-      {
-        $set: {
-          stockQuantity: result.stockQuantity - newStockAmount,
+
+    if (result.stockQuantity > 0) {
+      const updatedData = await Stocks.updateOne(
+        {
+          productId: id,
         },
+        {
+          $set: {
+            stockQuantity: result.stockQuantity - newStockAmount,
+          },
+        }
+      );
+      if (result && updatedData) {
+        return {
+          status: 200,
+          error: false,
+          message: "Success",
+          data: true,
+        };
+      } else {
+        return {
+          status: 404,
+          error: true,
+          message: "Failed",
+          data: null,
+        };
       }
-    );
-    if (result && updatedData) {
-      return {
-        status: 200,
-        error: false,
-        message: "Success",
-        data: true,
-      };
     } else {
+      const updatedData = await Stocks.updateOne(
+        {
+          productId: id,
+        },
+        {
+          $set: {
+            stockQuantity: 0,
+          },
+        }
+      );
       return {
-        status: 404,
+        status: 410,
         error: true,
-        message: "Failed",
+        message: "Insufficient Stock",
         data: null,
       };
     }

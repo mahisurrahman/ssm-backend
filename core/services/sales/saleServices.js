@@ -22,7 +22,7 @@ const createSales = async (product) => {
           sellingPrice: soldPrice,
           buyingPrice: buyingPrice,
         });
-        if (getStock.stockQuantity >= qtySold) {
+        if (getStock.stockQuantity >= qtySold ){
           const reduceStock = await stockServices.stockDecrease(
             qtySold,
             productId
