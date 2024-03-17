@@ -27,7 +27,7 @@ const createSales = async (product) => {
             qtySold,
             productId
           );
-          if (generateSales && reduceStock) {
+          if (generateSales && !reduceStock.error) {
             let myProduct = {
               _id: generateSales._id,
               productName: productName,
