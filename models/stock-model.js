@@ -16,7 +16,7 @@ const stockSchema = new mongoose.Schema({
     type: Boolean,
     default: true,
   },
-  
+
   isActive: {
     type: Boolean,
     default: true,
@@ -41,4 +41,3 @@ const stockSchema = new mongoose.Schema({
 const Stocks = new mongoose.model("Stocks", stockSchema);
 
 module.exports = Stocks;
-
