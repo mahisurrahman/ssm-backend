@@ -2,6 +2,7 @@ const Reciepts = require("../../../models/receipt-model");
 const Products = require("../../../models/product-model");
 const Stocks = require("../../../models/stock-model");
 const Sales = require("../../../models/sales-model");
+const { uuid } = require("uuidv4");
 
 //Generate Receipt//
 const generateReciept = async (dataArray) => {
@@ -10,7 +11,7 @@ const generateReciept = async (dataArray) => {
     //   d._id = d._id.toString();
     //   let salesId = d._id;
     // });
-
+    const recieptNumber = uuid();
     let tLoss = 0;
     let tProf = 0;
     for (let product of dataArray) {
@@ -22,6 +23,7 @@ const generateReciept = async (dataArray) => {
     }
 
     const receipts = await Reciepts.create({
+      ReceiptKey: recieptNumber,
       totalLoss: tLoss,
       totalProfit: tProf,
       soldProducts: dataArray,

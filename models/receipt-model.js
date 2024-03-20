@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
 
 const recieptSchema = new mongoose.Schema({
-  //   uniqueRecieptKey: {
-  //     type: String,
-  //     required: true,
-  //   },
+  ReceiptKey: {
+    type: String,
+    required: true,
+  },
   status: {
     type: Boolean,
     default: true,
