@@ -7,6 +7,14 @@ const { uuid } = require("uuidv4");
 //Generate Receipt//
 const generateReciept = async (dataArray) => {
   try {
+    if (dataArray.length <= 0) {
+      return {
+        status: 400,
+        error: true,
+        message: "Receipt wasn't added",
+        data: null,
+      };
+    }
     // dataArray.map((d) => {
     //   d._id = d._id.toString();
     //   let salesId = d._id;
@@ -16,14 +24,14 @@ const generateReciept = async (dataArray) => {
     let tProf = 0;
     for (let product of dataArray) {
       if (product.profit > 0) {
-        tProf = tProf + product.profit;
+        tProf = (tProf + product.profit) * product.quantitySold;
       } else {
-        tLoss = tLoss + product.loss;
+        tLoss = (tLoss + product.loss) * product.quantitySold;
       }
     }
 
     const receipts = await Reciepts.create({
-      ReceiptKey: recieptNumber,
+      receiptKey: recieptNumber,
       totalLoss: tLoss,
       totalProfit: tProf,
       soldProducts: dataArray,

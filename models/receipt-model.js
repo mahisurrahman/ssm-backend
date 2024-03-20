@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const recieptSchema = new mongoose.Schema({
-  ReceiptKey: {
+  receiptKey: {
     type: String,
     required: true,
   },

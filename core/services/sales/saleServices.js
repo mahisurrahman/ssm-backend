@@ -84,13 +84,14 @@ const validateData = async (sales) => {
 };
 
 //Calculate Profit Or Loss//
-const calcProfLoss = (bPrice, sPrice) => {
+const calcProfLoss = (bPrice, sPrice, qtySolds) => {
   let profitQty = 0;
   let lossQty = 0;
   if (bPrice > sPrice) {
-    lossQty = bPrice - sPrice;
+    let initialLossQty = bPrice - sPrice;
+    lossQty = initialLossQty * qtySolds;
   } else {
-    profitQty = sPrice - bPrice;
+    profitQty = (sPrice - bPrice) * qtySolds;
   }
   return { profitQty, lossQty };
 };
@@ -121,12 +122,18 @@ const createSales = async (product) => {
     }
 
     const isExists = await Products.findById(productId);
+    const stockExists = await Stocks.findOne({ productId: productId });
+    let qtySolds = stockExists.quantitySold;
     if (isExists.isDeleted === false) {
       let buyingPrice = isExists.price;
       let productName = isExists.productName;
 
       //Calculating Profit or Loss//
-      const { profitQty, lossQty } = calcProfLoss(buyingPrice, soldPrice);
+      const { profitQty, lossQty } = calcProfLoss(
+        buyingPrice,
+        soldPrice,
+        qtySolds
+      );
 
       let getStock = await Stocks.findOne({ productId });
       if (getStock.isDeleted === false) {
