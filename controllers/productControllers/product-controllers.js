@@ -3,7 +3,6 @@ const productServices = require("../../core/services/product/productService.js")
 //Create a Single Product//
 const createProducts = async (req, res) => {
   try {
-    
     const response = await productServices.productCreation(req.body);
     return res.send({ response });
   } catch (error) {
@@ -21,7 +20,7 @@ const createProducts = async (req, res) => {
 const showProducts = async (req, res) => {
   try {
     const response = await productServices.showAllProducts();
-    return res.send({ response });
+    return res.send(response);
   } catch (error) {
     console.error(error);
     return res.send({
@@ -89,7 +88,7 @@ const updateAProductPrice = async (req, res) => {
     const prodId = req.params.id;
     const uptInfo = req.body;
     const response = await productServices.updatePriceOfAProd(uptInfo, prodId);
-    return res.send({response});
+    return res.send({ response });
   } catch (error) {
     console.log(error);
     return res.send({
