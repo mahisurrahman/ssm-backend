@@ -3,6 +3,53 @@ const Products = require("../../../models/product-model");
 const Stocks = require("../../../models/stock-model");
 const stockServices = require("../stocks/stockService.js");
 
+const validateData = async (sales) => {
+  const exists = {};
+  for (const sale of sales) {
+    if (!exists[sale.productId]) {
+      exists[sale.productId] = {
+        productId: sale.productId,
+        sellingPrice: sale.sellingPrice,
+        quantitySold: sale.quantitySold,
+      };
+    } else {
+      return {
+        status: 400,
+        error: true,
+        message: "Same Product Inserted Multiple Times",
+        data: null,
+      };
+    }
+  }
+
+  let dataArray = [];
+  for (const sale of sales) {
+    if (sale.quantitySold === 0) {
+      return {
+        status: 400,
+        error: true,
+        message: "Bad request 'Quantity Sold Not Added'",
+        data: null,
+      };
+    }
+  }
+
+  for (const sale of sales) {
+    let response = await createSales(sale);
+    // dataArray.push(response.data);
+    if (response.data !== null) {
+      dataArray.push(response.data);
+    }
+  }
+
+  return {
+    status: 200,
+    error: false,
+    message: "Successfully Added Sales",
+    data: dataArray,
+  };
+};
+
 //Create new Sales//
 const createSales = async (product) => {
   try {
@@ -32,6 +79,19 @@ const createSales = async (product) => {
     if (isExists.isDeleted === false) {
       let buyingPrice = isExists.price;
       let productName = isExists.productName;
+
+      //Calculating Profit or Loss//
+      let profitQty = 0;
+      let lossQty = 0;
+
+      if (buyingPrice > soldPrice) {
+        lossQty = buyingPrice - soldPrice;
+        // console.log(lossQty, "Loss Quantity");
+      } else {
+        profitQty = soldPrice - buyingPrice;
+        // console.log(profitQty, "Profit Quantity");
+      }
+
       let getStock = await Stocks.findOne({ productId });
       if (getStock.isDeleted === false) {
         let generateSales = await Sales.create({
@@ -39,6 +99,8 @@ const createSales = async (product) => {
           quantitySold: qtySold,
           sellingPrice: soldPrice,
           buyingPrice: buyingPrice,
+          profit: profitQty,
+          loss: lossQty,
         });
         if (getStock.stockQuantity >= qtySold) {
           const reduceStock = await stockServices.stockDecrease(
@@ -52,8 +114,8 @@ const createSales = async (product) => {
               productId: productId,
               sellingPrice: generateSales.sellingPrice,
               buyingPrice: buyingPrice,
-              profit: generateSales.profit,
-              loss: generateSales.loss,
+              profit: profitQty,
+              loss: lossQty,
               message: "Sales Created and Stock Deducted",
             };
             return {
@@ -105,4 +167,4 @@ const createSales = async (product) => {
   }
 };
 
-module.exports = { createSales };
+module.exports = { createSales, validateData };
