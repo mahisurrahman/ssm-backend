@@ -6,7 +6,7 @@ const router = express.Router();
 const registerSales = async (req, res) => {
   try {
     const { sales } = req.body;
-    const response = await saleServices.validateData(sales);
+    const response = await saleServices.checkSalesData(sales);
     return res.send(response);
   } catch (error) {
     console.log(error);

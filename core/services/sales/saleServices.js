@@ -5,41 +5,43 @@ const stockServices = require("../stocks/stockService.js");
 const receiptServices = require("../receipt/receiptServices.js");
 
 //Validate Data before Pushing Data to Database//
-const validateData = async (sales) => {
-  const exists = {};
-  for (const sale of sales) {
-    if (!exists[sale.productId]) {
-      exists[sale.productId] = {
-        productId: sale.productId,
-        sellingPrice: sale.sellingPrice,
-        quantitySold: sale.quantitySold,
-      };
-    } else {
-      return {
-        status: 400,
-        error: true,
-        message: "Same Product Inserted Multiple Times",
-        data: null,
-      };
-    }
-  }
-  let dataArray = [];
-
-  for (const sale of sales) {
-    for (const sale of sales) {
-      if (sale.quantitySold === 0) {
+const checkSalesData = async (sales) => {
+  try {
+    //Check User Has Given same product Id Twice or Not//
+    const exists = {};
+    for (let sale of sales) {
+      if (!exists[sale.productId]) {
+        exists[sale.productId] = {
+          productId: sale.productId,
+          sellingPrice: sale.sellingPrice,
+          quantitySold: sale.quantitySold,
+        };
+      } else {
         return {
           status: 400,
           error: true,
-          message: "Quantity Sold Not Added",
+          message: "Same Product Inserted Multiple Times",
           data: null,
         };
       }
     }
 
-    for (const sale of sales) {
-      let prodQty = await Stocks.findOne({ productId: sale.productId });
-      if (sale.quantitySold > prodQty.stockQuantity) {
+    //Check if the Quanity Sold is Zero or Not//
+    for (let sale of sales) {
+      if (sale.quantitySold <= 0) {
+        return {
+          status: 400,
+          error: true,
+          message: "Invalid Sold Quantity",
+          data: null,
+        };
+      }
+    }
+
+    //Checking Stock Availability//
+    for (let sale of sales) {
+      let productStock = await Stocks.findOne({ productId: sale.productId });
+      if (sale.quantitySold > productStock.stockQuantity) {
         return {
           status: 400,
           error: true,
@@ -49,154 +51,122 @@ const validateData = async (sales) => {
       }
     }
 
-    let response = await createSales(sale);
-    if (response.error !== true) {
-      let receiptInfo = {
-        productId: response.data.productId,
-        productName: response.data.productName,
-        quantitySold: response.data.quantitySold,
-        sellingPrice: response.data.sellingPrice,
-        buyingPrice: response.data.buyingPrice,
-        profit: response.data.profit,
-        loss: response.data.loss,
-        salesId: response.data._id,
-      };
-      dataArray.push(receiptInfo);
-    }
-  }
-  let receipt = await receiptServices.generateReciept(dataArray);
+    let dataArray = [];
+    for (let sale of sales) {
+      let productDetails = await Products.findOne({ _id: sale.productId });
+      let stockDetails = await Stocks.findOne({ productId: sale.productId });
 
-  if (receipt) {
+      //Calculated Profit and Loss//
+      let profitAmnt = 0;
+      let lossAmnt = 0;
+      if (sale.sellingPrice > productDetails.price) {
+        profitAmnt =
+          (sale.sellingPrice - productDetails.price) * sale.quantitySold;
+      } else {
+        lossAmnt =
+          (productDetails.price - sale.sellingPrice) * sale.quantitySold;
+      }
+
+      //Wrapping the Data//
+      let saleData = {
+        productId: sale.productId,
+        productName: productDetails.productName,
+        stockQuantity: stockDetails.stockQuantity,
+        quantitySold: sale.quantitySold,
+        buyingPrice: productDetails.price,
+        sellingPrice: sale.sellingPrice,
+        totalProfit: profitAmnt,
+        totalLoss: lossAmnt,
+      };
+      dataArray.push(saleData);
+    }
+
+    //Transfer the Data to the Create Sales Function//
+    const transferData = await createSales(dataArray);
+    return transferData;
+  } catch (error) {
+    console.log(error);
     return {
-      status: 200,
-      error: false,
-      message: "Successfully Added Sales",
-      data: receipt,
-    };
-  } else {
-    return {
-      status: 400,
+      status: 500,
       error: true,
-      message: "Failed to Proceed",
-      data: null,
+      message: "Internal Server Error",
+      data: error,
     };
   }
 };
 
-//Calculate Profit Or Loss//
-const calcProfLoss = (bPrice, sPrice, qtySolds) => {
-  let profitQty = 0;
-  let lossQty = 0;
-  if (bPrice > sPrice) {
-    let initialLossQty = bPrice - sPrice;
-    lossQty = initialLossQty * qtySolds;
-  } else {
-    profitQty = (sPrice - bPrice) * qtySolds;
-  }
-  return { profitQty, lossQty };
-};
-
-//Create new Sales//
-const createSales = async (product) => {
+//Create Sales//
+const createSales = async (dataArray) => {
   try {
-    let productId = product.productId;
-    let qtySold = product.quantitySold;
-    let soldPrice = product.sellingPrice;
-
-    if (!product || product.length == 0) {
-      return {
-        status: 404,
-        error: true,
-        message: "No Product Added",
-        data: null,
-      };
-    }
-
-    if (qtySold <= 0) {
-      return {
-        status: 422,
-        error: true,
-        message: "Invalid Input for Quantity Sold",
-        data: null,
-      };
-    }
-
-    const isExists = await Products.findById(productId);
-    const stockExists = await Stocks.findOne({ productId: productId });
-    let qtySolds = stockExists.quantitySold;
-    if (isExists.isDeleted === false) {
-      let buyingPrice = isExists.price;
-      let productName = isExists.productName;
-
-      //Calculating Profit or Loss//
-      const { profitQty, lossQty } = calcProfLoss(
-        buyingPrice,
-        soldPrice,
-        qtySolds
-      );
-
-      let getStock = await Stocks.findOne({ productId });
-      if (getStock.isDeleted === false) {
-        let generateSales = await Sales.create({
-          productId: productId,
-          quantitySold: qtySold,
-          sellingPrice: soldPrice,
-          buyingPrice: buyingPrice,
-          profit: profitQty,
-          loss: lossQty,
-        });
-
-        if (getStock.stockQuantity >= qtySold) {
-          const reduceStock = await stockServices.stockDecrease(
-            qtySold,
-            productId
-          );
-          if (generateSales && !reduceStock.error) {
-            let myProduct = {
-              _id: generateSales._id,
-              productName: productName,
-              quantitySold: qtySold,
-              productId: productId,
-              sellingPrice: generateSales.sellingPrice,
-              buyingPrice: buyingPrice,
-              profit: profitQty,
-              loss: lossQty,
-            };
-            return {
-              status: 200,
-              error: false,
-              message: "Sales Added",
-              data: myProduct,
-            };
-          } else {
-            return {
-              status: 400,
-              error: true,
-              message: "Failed to Add the Sales",
-              data: null,
-            };
-          }
+    let receiptInfo = null;
+    let reduceStock = null;
+    let salesCreated = [];
+    for (let data of dataArray) {
+      let generateSales = await Sales.create({
+        productId: data.productId,
+        quantitySold: data.quantitySold,
+        sellingPrice: data.sellingPrice,
+        buyingPrice: data.buyingPrice,
+        profit: data.totalProfit,
+        loss: data.totalLoss,
+      });
+      if (generateSales) {
+        reduceStock = await stockServices.stockDecrease(
+          data.quantitySold,
+          data.productId
+        );
+        if (reduceStock) {
+          let receiptInfo = {
+            productName: data.productName,
+            productId: data.productId,
+            quantitySold: data.quantitySold,
+            sellingPrice: data.sellingPrice,
+            buyingPrice: data.buyingPrice,
+            profit: data.totalProfit,
+            loss: data.totalLoss,
+            salesId: generateSales._id,
+          };
+          salesCreated.push(receiptInfo);
         } else {
           return {
-            status: 410,
+            status: 304,
             error: true,
-            message: "Insufficient Stock",
+            message: "Not Modified - Failed to Transfer Data to Create Reciept",
             data: null,
           };
         }
       } else {
         return {
-          status: 410,
+          status: 304,
           error: true,
-          message: "No Stock Available",
+          message: "Not Modified - Failed to Reduce The Stock",
+          data: null,
+        };
+      }
+    }
+
+    if (reduceStock !== null) {
+      let generateReceipt = await receiptServices.generateReciept(salesCreated);
+      if (!generateReceipt.error) {
+        return {
+          status: 200,
+          error: false,
+          message: "Success - Added the Sales and the Reciept",
+          data: generateReceipt,
+        };
+      } else {
+        return {
+          status: 304,
+          error: true,
+          message: "Not Modified - Failed to Generate Receipt",
           data: null,
         };
       }
     } else {
       return {
-        status: 404,
+        status: 444,
         error: true,
-        message: "Product Not Found",
+        message: "this",
         data: null,
       };
     }
@@ -312,9 +282,9 @@ const removeSales = async (product) => {
 };
 
 module.exports = {
-  createSales,
-  validateData,
+  checkSalesData,
   showAllSales,
   showSingleSale,
   removeSales,
+  createSales,
 };

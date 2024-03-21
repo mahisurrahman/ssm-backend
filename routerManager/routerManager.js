@@ -18,7 +18,7 @@ const routerManager = (app) => {
   app.use("/sales", salesRouter);
 
   //Receipt Routes//
-  app.use("/receipt", receiptRouter);
+  app.use("/receipts", receiptRouter);
 };
 
 module.exports = routerManager;

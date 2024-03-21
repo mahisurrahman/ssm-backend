@@ -5,9 +5,18 @@ const Sales = require("../../../models/sales-model");
 const { uuid } = require("uuidv4");
 
 //Generate Receipt//
-const generateReciept = async (dataArray) => {
+const generateReciept = async (salesCreated) => {
   try {
-    if (dataArray.length <= 0) {
+    if (salesCreated.lenght <= 0) {
+      return {
+        status: 400,
+        error: true,
+        message: "Invalid Sold Quantity",
+        data: null,
+      };
+    }
+    const recieptNumber = uuid();
+    if (salesCreated.length <= 0) {
       return {
         status: 400,
         error: true,
@@ -15,18 +24,14 @@ const generateReciept = async (dataArray) => {
         data: null,
       };
     }
-    // dataArray.map((d) => {
-    //   d._id = d._id.toString();
-    //   let salesId = d._id;
-    // });
-    const recieptNumber = uuid();
+
     let tLoss = 0;
     let tProf = 0;
-    for (let product of dataArray) {
+    for (let product of salesCreated) {
       if (product.profit > 0) {
-        tProf = (tProf + product.profit) * product.quantitySold;
+        tProf = tProf + product.profit;
       } else {
-        tLoss = (tLoss + product.loss) * product.quantitySold;
+        tLoss = tLoss + product.loss;
       }
     }
 
@@ -34,21 +39,21 @@ const generateReciept = async (dataArray) => {
       receiptKey: recieptNumber,
       totalLoss: tLoss,
       totalProfit: tProf,
-      soldProducts: dataArray,
+      soldProducts: salesCreated,
     });
 
     if (receipts) {
       return {
         status: 200,
         error: false,
-        message: "Receipt Added",
+        message: "Success !!!",
         data: receipts,
       };
     } else {
       return {
         status: 400,
         error: true,
-        message: "Receipt wasn't added",
+        message: "Failed !!!",
         data: null,
       };
     }
@@ -84,4 +89,104 @@ const showReciepts = async () => {
   }
 };
 
-module.exports = { generateReciept, showReciepts };
+//Show Single Receipts//
+const showSingleReceipts = async (data) => {
+  console.log(data);
+  try {
+    const receiptId = data.id;
+    const result = await Reciepts.findById(receiptId, { isDeleted: false });
+
+    if (result) {
+      return {
+        status: 200,
+        error: false,
+        message: "Success",
+        data: result,
+      };
+    } else {
+      return {
+        status: 404,
+        error: true,
+        message: "Failed -- Receipts not Found",
+        data: null,
+      };
+    }
+  } catch (error) {
+    return res.send({
+      status: 500,
+      error: true,
+      message: "Internal Server Error",
+      data: error,
+    });
+  }
+};
+
+//Cancel Receipts//
+const removeReceipts = async (data) => {
+  try {
+    const receiptId = data.id;
+    const receiptDetails = await Reciepts.findById(receiptId, {
+      isDeleted: false,
+    });
+    // if()
+    let receiptProducts = [];
+    for (let products of receiptDetails.soldProducts) {
+      receiptProducts.push(products);
+    }
+
+    let prevQty = 0;
+    for (let item of receiptProducts) {
+      let stockDetails = await Stocks.findOne({ productId: item.productId });
+      prevQty = stockDetails.stockQuantity;
+      if (stockDetails) {
+        Stocks.updateOne(
+          { productId: item.productId },
+          {
+            stockQuantity: prevQty + item.quantitySold,
+          }
+        );
+      } else {
+        return {
+          status: 304,
+          error: true,
+          message: "Stock Details Operation Failed",
+          data: null,
+        };
+      }
+    }
+    let removeReceipt = await Reciepts.updateOne(
+      { _id: receiptId },
+      { isDeleted: true }
+    );
+    if (removeReceipt) {
+      return {
+        status: 200,
+        error: false,
+        message: "Success - Receipt Removed",
+        data: null,
+      };
+    } else {
+      return {
+        status: 403,
+        error: true,
+        message: "Failed - Receipt Failed to Remove",
+        data: null,
+      };
+    }
+  } catch (error) {
+    //c
+    return res.send({
+      status: 500,
+      error: true,
+      message: "Internal Server Error",
+      data: error,
+    });
+  }
+};
+
+module.exports = {
+  generateReciept,
+  showReciepts,
+  removeReceipts,
+  showSingleReceipts,
+};

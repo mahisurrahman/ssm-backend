@@ -10,10 +10,6 @@ const salesSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  //   date: {
-  //     type: Date,
-  //     required: true,
-  //   },
   sellingPrice: {
     type: Number,
     required: true,

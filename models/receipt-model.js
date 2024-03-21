@@ -27,11 +27,11 @@ const recieptSchema = new mongoose.Schema({
   },
   totalLoss: {
     type: Number,
-    required: true,
+    default: 0,
   },
   totalProfit: {
     type: Number,
-    required: true,
+    default: 0,
   },
   //   UUID4
   soldProducts: [
@@ -62,11 +62,11 @@ const recieptSchema = new mongoose.Schema({
       },
       profit: {
         type: Number,
-        required: true,
+        default: 0,
       },
       loss: {
         type: Number,
-        required: true,
+        default: 0,
       },
     },
   ],
