@@ -10,6 +10,6 @@ const {
 router.post("/crt", registerSales);
 router.get("/src", showSales);
 router.get("/src/:id", showSingleSale);
-router.get("/del/:id", deleteSales);
+router.get("/del", deleteSales);
 
 module.exports = router;

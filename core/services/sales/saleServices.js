@@ -238,7 +238,7 @@ const showSingleSale = async (product) => {
 
 const removeSales = async (product) => {
   try {
-    const productId = product.id;
+    const productId = product;
     const result = await Sales.findOneAndUpdate(
       {
         productId: productId,

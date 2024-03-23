@@ -9,7 +9,7 @@ const router = express.Router();
 // router.post("/crt");
 router.get("/src", allReciepts);
 router.get("/src/:id", showSingleReceipt);
-router.get("/cancl/:id", cancelReciepts);
+router.get("/cancl", cancelReciepts);
 // router.get("/del/:id");
 
 module.exports = router;

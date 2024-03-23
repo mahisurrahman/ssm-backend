@@ -54,7 +54,7 @@ const showSingleSale = async (req, res) => {
 //Delete Individual Sales//
 const deleteSales = async (req, res) => {
   try {
-    const response = await saleServices.removeSales(req.params);
+    const response = await saleServices.removeSales(req.body);
     return res.send(response);
   } catch (error) {
     console.log(error);

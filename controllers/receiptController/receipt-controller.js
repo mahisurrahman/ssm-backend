@@ -36,7 +36,7 @@ const showSingleReceipt = async (req, res) => {
 //Cancel Existing Reciepts//
 const cancelReciepts = async (req, res) => {
   try {
-    const response = await recieptServices.removeReceipts(req.params);
+    const response = await recieptServices.removeReceipts(req.body);
     return res.send(response);
   } catch (error) {
     return res.send({
