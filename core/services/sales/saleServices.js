@@ -6,6 +6,7 @@ const receiptServices = require("../receipt/receiptServices.js");
 
 //Validate Data before Pushing Data to Database//
 const checkSalesData = async (sales) => {
+  
   try {
     //Check User Has Given same product Id Twice or Not//
     const exists = {};
@@ -181,7 +182,7 @@ const createSales = async (dataArray) => {
   }
 };
 
-//Show all the Services//
+//Show all the Sales//
 const showAllSales = async () => {
   try {
     const result = await Sales.find({ isDeleted: false });

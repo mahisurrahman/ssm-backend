@@ -2,7 +2,6 @@ const Reciepts = require("../../../models/receipt-model");
 const Products = require("../../../models/product-model");
 const Stocks = require("../../../models/stock-model");
 const Sales = require("../../../models/sales-model");
-// const { removeSales } = require("../../services/sales/saleServices");
 const { uuid } = require("uuidv4");
 
 //Generate Receipt//
