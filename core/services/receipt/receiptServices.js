@@ -7,6 +7,7 @@ const { uuid } = require("uuidv4");
 //Generate Receipt//
 const generateReciept = async (salesCreated) => {
   try {
+    console.log(salesCreated);
     if (salesCreated.length <= 0) {
       return {
         status: 400,
@@ -85,7 +86,10 @@ const showSingleReceipts = async (data) => {
   console.log(data);
   try {
     const receiptId = data.id;
-    const result = await Reciepts.findById(receiptId, { isDeleted: false });
+    const result = await Reciepts.findOne({
+      _id: receiptId,
+      isDeleted: false,
+    });
 
     if (result) {
       return {
@@ -237,116 +241,6 @@ const removeReceipts = async (data) => {
     };
   }
 };
-
-//Cancel Receipts//
-// const removeReceipts = async (data) => {
-//   try {
-//     const receiptId = data.receiptKey;
-//     if (!receiptId) {
-//       return {
-//         status: 404,
-//         error: true,
-//         message: "Invalid Receipt Key",
-//         data: null,
-//       };
-//     }
-
-//     // const receiptDetails = await Reciepts.findOne({
-//     //   receiptKey: receiptId,
-//     //   isDeleted: false,
-//     // });
-
-//     if (!receiptDetails) {
-//       return {
-//         status: 404,
-//         error: true,
-//         message: "Receipt Not Found",
-//         data: null,
-//       };
-//     }
-
-//     let receiptProducts = [];
-//     for (let products of receiptDetails.soldProducts) {
-//       receiptProducts.push(products);
-//     }
-
-//     let prevQty = 0;
-//     for (let item of receiptProducts) {
-//       let stockDetails = await Stocks.findOne({ productId: item.productId });
-//       prevQty = stockDetails.stockQuantity;
-
-//       if (stockDetails) {
-//         Stocks.updateOne(
-//           { productId: item.productId },
-//           {
-//             stockQuantity: prevQty + item.quantitySold,
-//           }
-//         );
-
-//         let result = await Sales.findOneAndUpdate(
-//           { productId: item.productId },
-//           {
-//             $set: {
-//               isDeleted: true,
-//               isActive: false,
-//               deletedDate: Date.now(),
-//             },
-//           },
-//           {
-//             new: true,
-//           }
-//         );
-//         if (stockDetails && result) {
-//           let removeReceipt = await Reciepts.findOneAndUpdate(
-//             { _id: receiptId },
-//             {
-//               $set: {
-//                 isDeleted: true,
-//               },
-//             }
-//           );
-//           if (removeReceipt) {
-//             return {
-//               status: 200,
-//               error: false,
-//               message: "Success - Receipt, Sales Removed and Stock Retrieved",
-//               data: null,
-//             };
-//           } else {
-//             return {
-//               status: 403,
-//               error: true,
-//               message: "Failed - Receipt Failed to Remove",
-//               data: null,
-//             };
-//           }
-//         } else {
-//           return {
-//             status: 409,
-//             error: true,
-//             message: "Failed - Conflict",
-//             data: null,
-//           };
-//         }
-//       } else {
-//         return {
-//           status: 304,
-//           error: true,
-//           message: "Stock Details Operation Failed",
-//           data: null,
-//         };
-//       }
-//     }
-//   } catch (error) {
-//     console.log(error);
-//     return res.send({
-//       status: 500,
-//       error: true,
-//       message: "Internal Server Error",
-//       data: error,
-//     });
-//   }
-// };
 
 module.exports = {
   generateReciept,

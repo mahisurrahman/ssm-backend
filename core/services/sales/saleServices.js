@@ -6,7 +6,6 @@ const receiptServices = require("../receipt/receiptServices.js");
 
 //Validate Data before Pushing Data to Database//
 const checkSalesData = async (sales) => {
-  
   try {
     //Check User Has Given same product Id Twice or Not//
     const exists = {};
@@ -237,55 +236,51 @@ const showSingleSale = async (product) => {
   }
 };
 
-const removeSales = async (product) => {
-  try {
-    const productId = product;
-    const result = await Sales.findOneAndUpdate(
-      {
-        productId: productId,
-      },
-      {
-        $set: {
-          isDeleted: true,
-          isActive: false,
-          deletedDate: Date.now(),
-        },
-      },
-      {
-        new: true,
-      }
-    );
+// const removeSales = async (salesInfo) => {
+//   try {
+//     const salesId = salesInfo._id;
+//     const result = await Sales.findOneAndUpdate(
+//       {
+//         _id: salesId,
+//         isDeleted: false,
+//       },
+//       {
+//         isDeleted: true,
+//         isActive: false,
+//         deletedDate: Date.now(),
+//       }
+//     );
 
-    if (result) {
-      return {
-        status: 200,
-        error: false,
-        message: "Success",
-        data: result,
-      };
-    } else {
-      return {
-        status: 404,
-        error: true,
-        message: "Failed to Delete Sales",
-        data: null,
-      };
-    }
-  } catch (error) {
-    console.log(error);
-    return {
-      status: 500,
-      error: true,
-      message: "Internal Server Error",
-      data: error,
-    };
-  }
-};
+//     if (result) {
+//       return {
+//         status: 200,
+//         error: false,
+//         message: "Success",
+//         data: result,
+//       };
+//     } else {
+//       return {
+//         status: 404,
+//         error: true,
+//         message: "Failed to Delete Sales",
+//         data: null,
+//       };
+//     }
+//   } catch (error) {
+//     console.log(error);
+//     return {
+//       status: 500,
+//       error: true,
+//       message: "Internal Server Error",
+//       data: error,
+//     };
+//   }
+// };
 
 module.exports = {
   checkSalesData,
   showAllSales,
   showSingleSale,
-  removeSales,
+  // removeSales,
   createSales,
 };
