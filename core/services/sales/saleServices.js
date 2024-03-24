@@ -202,7 +202,7 @@ const showAllSales = async () => {
   }
 };
 
-//Show Individual Product Sales//
+//Show Individual Product Sales Filtered Through Product Id//
 const showSingleSale = async (product) => {
   try {
     const productId = product.id;

@@ -6,8 +6,8 @@ const { uuid } = require("uuidv4");
 
 //Generate Receipt//
 const generateReciept = async (salesCreated) => {
+  console.log(salesCreated);
   try {
-    console.log(salesCreated);
     if (salesCreated.length <= 0) {
       return {
         status: 400,
@@ -171,6 +171,7 @@ const removeReceipts = async (data) => {
           //Removing the Sales//
           for (let info of soldProds) {
             let salesId = info.salesId;
+            console.log(salesId);
             let salesInfo = await Sales.findOneAndUpdate(
               {
                 _id: salesId,
