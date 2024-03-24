@@ -67,5 +67,14 @@ Content-Type: application/json
     "receiptKey": "a35aa233-d8fe-44dc-b27a-27abd58ff09b"
 }
 
+
+
+
+
+
 ##         UseCase: To Remove a single Receipt, through the Receipt Key, with removing Sales data and also reseting the product Stock's value.
 ##              Note: If the sales Functionality Fails, the receipt will also fail to generate. If invalid API key used, it will execute the error and pause the operation. 
+
+
+
+#################################################################################

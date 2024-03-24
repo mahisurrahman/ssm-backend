@@ -43,7 +43,7 @@ GET http://localhost:8000/sales/src HTTP/1.1
 
 
 ##      UseCase: To Display all the Sales Listed
-            Note: 
+##            Note: 
 
 
 

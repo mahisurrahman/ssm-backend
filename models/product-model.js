@@ -9,8 +9,9 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  stockId:{
-    type:String,
+  stockId: {
+    type: String,
+    required: true,
   },
   price: {
     type: Number,
@@ -30,7 +31,7 @@ const productSchema = new mongoose.Schema({
   },
   createDate: {
     type: Date,
-    default: new Date(), 
+    default: new Date(),
   },
   deleteDate: {
     type: Date,
@@ -38,6 +39,6 @@ const productSchema = new mongoose.Schema({
   },
 });
 
-const Products =  new mongoose.model('Product', productSchema);
+const Products = new mongoose.model("Product", productSchema);
 
 module.exports = Products;

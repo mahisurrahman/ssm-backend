@@ -68,28 +68,6 @@ Content-Type: application/json
 
 
 
-#################################################################################
-
-
-###
-## Module Code: 2.1
-## Module Name: Stock
-## Method: Decrease Stock Quantity
-## Method Code: 2.1.4
-## Technical Description: Decrease the Stock Quantity when the products gets out of the inventory (or sold)
-## productId = ObjectId('65e964f96f1ddc6db83317a2');
-
-POST http://localhost:8000/stocks/upt-dec/65e964f96f1ddc6db83317a2 HTTP/1.1
-Content-Type: application/json
-
-{
-    "stockQuantity": 100
-}
-
-##      Usecase: To Increase a Single Product's Stock Automatically when products enters the inventory.
-##          Note:
-
-
 
 #################################################################################
 
@@ -139,10 +117,30 @@ GET http://localhost:8000/stocks/src HTTP/1.1
 
 
 ###
+## Module COde: 2.1
+## Module Name: Stock
+## Method: Show Single Stock
+## Method Code: 2.1.6
+## Technical Description: With this API you can directly see the stock of a single Product 
+## Product Id: 65f7fb3d51d8978531f0a1e8
+
+GET http://localhost:8000/stocks/src/65f7fb3d51d8978531f0a1e8 HTTP/1.1
+
+
+##         UseCase: To get the Stocks Quantity Available of a Single Product. 
+##              Note: If wrong product Key used, it will execute and error. 
+
+
+
+#################################################################################
+
+
+
+###
 ## Module Code: 2.1
 ## Module Name: Stock
 ## Method: Soft Delete Stock Data (isDeleted: true)
-## Method Code: 2.1.6
+## Method Code: 2.1.7
 ## Technical Description :  With this API you can delete any product's stock.
 ## productId = ObjectId('65e964f96f1ddc6db83317a2');
 
@@ -153,3 +151,4 @@ GET http://localhost:8000/stocks/del/65e964f96f1ddc6db83317a2 HTTP/1.1
 ##          UseCase: Suppose, you need to remove junk stocks data of a product from your inventory, 
 ##                      then here comes the API for it. 
 ##              Note:
+
