@@ -2,12 +2,8 @@ const mongoose = require("mongoose");
 
 const dailyReportSchema = new mongoose.Schema({
   productId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Product",
-  },
-  salesId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Sale",
+    type: String,
+    required: true,
   },
   productName: {
     type: String,
@@ -55,6 +51,6 @@ const dailyReportSchema = new mongoose.Schema({
   },
 });
 
-const DailyReports = new mongoose.model("Daily Report", dailyReportSchema);
+const DailyReports = new mongoose.model("DailyReport", dailyReportSchema);
 
 module.exports = DailyReports;

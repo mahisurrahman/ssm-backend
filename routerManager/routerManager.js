@@ -3,6 +3,7 @@ const productRouter = require("../Routes/product/product-route.js");
 const stockRouter = require("../Routes/stock/stock-route.js");
 const salesRouter = require("../Routes/sale/sale-route");
 const receiptRouter = require("../Routes/receipt/receipt-router.js");
+const dailyReportRouter = require("../Routes/dailyReport/dailyReportRoute.js");
 
 const routerManager = (app) => {
   //Home Routes//
@@ -19,6 +20,9 @@ const routerManager = (app) => {
 
   //Receipt Routes//
   app.use("/receipts", receiptRouter);
+
+  //Daily Report Routes//
+  app.use("/daily-report", dailyReportRouter);
 };
 
 module.exports = routerManager;

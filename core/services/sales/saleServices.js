@@ -146,13 +146,15 @@ const createSales = async (dataArray) => {
     }
 
     if (reduceStock !== null) {
-      let generateReceipt = await receiptServices.generateReciept(salesCreated);
-      if (!generateReceipt.error) {
+      let generateReceipts = await receiptServices.generateReciept(
+        salesCreated
+      );
+      if (generateReceipts) {
         return {
           status: 200,
           error: false,
           message: "Success - Added the Sales and the Reciept",
-          data: generateReceipt,
+          data: generateReceipts,
         };
       } else {
         return {

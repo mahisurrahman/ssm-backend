@@ -2,11 +2,12 @@ const Reciepts = require("../../../models/receipt-model");
 const Products = require("../../../models/product-model");
 const Stocks = require("../../../models/stock-model");
 const Sales = require("../../../models/sales-model");
+const DailyRprt = require("../../../models/dailyReport-model");
+const dailyRportServices = require("../dailyReport/dailyReportServices");
 const { uuid } = require("uuidv4");
 
 //Generate Receipt//
 const generateReciept = async (salesCreated) => {
-  console.log(salesCreated);
   try {
     if (salesCreated.length <= 0) {
       return {
@@ -35,12 +36,24 @@ const generateReciept = async (salesCreated) => {
     });
 
     if (receipts) {
-      return {
-        status: 200,
-        error: false,
-        message: "Success !!!",
-        data: receipts,
-      };
+      let generateDailyReport = await dailyRportServices.newDailyReport(
+        salesCreated
+      );
+      if (generateDailyReport) {
+        return {
+          status: 200,
+          error: false,
+          message: "Success",
+          data: null,
+        };
+      } else {
+        return {
+          status: 409,
+          error: true,
+          message: "Failed",
+          data: null,
+        };
+      }
     } else {
       return {
         status: 400,
