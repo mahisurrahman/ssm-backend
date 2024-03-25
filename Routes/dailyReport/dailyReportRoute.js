@@ -2,11 +2,14 @@ const express = require("express");
 const router = express.Router();
 const {
   generateDailyReport,
+  showAllDailyReport,
+  showSingleDailyReport,
+  deleteDailyReport,
 } = require("../../controllers/dailyReportController/dailyReportController");
 
-router.post("/crt", generateDailyReport);
-router.get("/src");
-router.get("/src/:id");
-router.get("/del/:id");
+router.post("/crt");
+router.get("/src", showAllDailyReport);
+router.get("/src/:id", showSingleDailyReport);
+router.get("/del/:id", deleteDailyReport);
 
 module.exports = router;

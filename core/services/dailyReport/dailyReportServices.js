@@ -10,30 +10,35 @@ const newDailyReport = async (salesCreated) => {
     let updateDailyRprt = null;
     let createDailyReport = null;
     for (let item of salesCreated) {
+      //for current date
       let productExists = await DailyRprt.findOne({
         productId: item.productId,
       });
 
-      let prvBuyPrice = 0;
+      let newBuyPrice = 0;
       let totalBuyPrice = 0;
-      let prvSellingPrice = 0;
+      let newSellingPrice = 0;
       let totalSellingPrice = 0;
       let totalProfit = 0;
       let totalLoss = 0;
       let totalQtySold = 0;
+      let prev;
 
       if (productExists !== null) {
-        let prvBuyPrice = item.buyingPrice * item.quantitySold;
-        let totalBuyPrice = productExists.totalBuyingPrice + prvBuyPrice;
+        //update
+        let newBuyPrice = item.buyingPrice * item.quantitySold;
+        let totalBuyPrice = productExists.totalBuyingPrice + newBuyPrice;
 
-        let prvSellingPrice = item.sellingPrice * item.quantitySold;
+        let newSellingPrice = item.sellingPrice * item.quantitySold;
         let totalSellingPrice =
-          productExists.totalSellingPrice + prvSellingPrice;
-
-        let totalProfit = productExists.totalProfit + item.profit;
-        let totalLoss = productExists.totalLoss + item.loss;
+          productExists.totalSellingPrice + newSellingPrice;
 
         let totalQtySold = productExists.totalQuantitySold + item.quantitySold;
+
+        
+
+        // let totalProfit = productExists.totalProfit + item.profit;
+        // let totalLoss = productExists.totalLoss + item.loss;
 
         let updateDailyRprt = await DailyRprt.findOneAndUpdate(
           { productId: item.productId },
@@ -49,6 +54,7 @@ const newDailyReport = async (salesCreated) => {
           }
         );
       } else {
+        //create
         let createDailyReport = await DailyRprt.create({
           productId: item.productId,
           productName: item.productName,
@@ -61,7 +67,7 @@ const newDailyReport = async (salesCreated) => {
       }
     }
 
-    if (updateDailyRprt && createDailyReport !== null) {
+    if (updateDailyRprt || createDailyReport !== null) {
       return {
         status: 200,
         error: false,
@@ -87,4 +93,102 @@ const newDailyReport = async (salesCreated) => {
   }
 };
 
-module.exports = { newDailyReport };
+//Show All Daily Reports//
+const showDailyReports = async () => {
+  try {
+    const allReports = await DailyRprt.find({ isDeleted: false });
+    return {
+      status: 200,
+      error: false,
+      message: "Success - Shown All Reports",
+      data: null,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      status: 500,
+      error: true,
+      message: "Internal Server Error",
+      data: error,
+    };
+  }
+};
+
+//Show Single Daily Reports//
+const showSingleDailyReports = async (data) => {
+  try {
+    const singleReport = await DailyRprt.findOne({
+      _id: data.id,
+      isDeleted: false,
+    });
+
+    if (singleReport) {
+      return {
+        status: 200,
+        error: false,
+        message: "Success - Single Daily Report Shown",
+        data: singleReport,
+      };
+    } else {
+      return {
+        status: 404,
+        error: true,
+        message: "Failed - Can't Found the Desired Sales Report",
+        data: null,
+      };
+    }
+  } catch (error) {
+    console.log(error);
+    return {
+      status: 500,
+      error: true,
+      message: "Internal Server Error",
+      data: error,
+    };
+  }
+};
+
+//Delete Single Sale Reports//
+const deleteSingleDailyReport = async (data) => {
+  try {
+    const removeReport = await DailyRprt.findOneAndUpdate(
+      { _id: data.id, isDeleted: false },
+      {
+        isDeleted: true,
+      },
+      {
+        new: true,
+      }
+    );
+    if (removeReport) {
+      return {
+        status: 200,
+        error: false,
+        message: "Success - Daily Sale Removed",
+        data: null,
+      };
+    } else {
+      return {
+        status: 409,
+        error: true,
+        message: "Failed - Daily Sale Wasn't Removed",
+        data: null,
+      };
+    }
+  } catch (error) {
+    console.log(error);
+    return {
+      status: 500,
+      error: true,
+      message: "Internal Server Error",
+      data: error,
+    };
+  }
+};
+
+module.exports = {
+  newDailyReport,
+  showDailyReports,
+  showSingleDailyReports,
+  deleteSingleDailyReport,
+};
