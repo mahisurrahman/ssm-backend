@@ -8,7 +8,6 @@ const { uuid } = require("uuidv4");
 
 //Generate Receipt//
 const generateReciept = async (salesCreated) => {
-  console.log(salesCreated);
   try {
     if (salesCreated.length <= 0) {
       return {
@@ -51,10 +50,13 @@ const generateReciept = async (salesCreated) => {
     const receipts = await Reciepts.create(receiptData);
 
     if (receipts) {
-      let generateDailyReport = await dailyRportServices.newDailyReport(
-        salesCreated
-      );
-      if (generateDailyReport) {
+      let generateDailyReport = null;
+      for (let product of salesCreated) {
+        let generateDailyReport = await dailyRportServices.newDailyReport(
+          product
+        );
+      }
+      if (generateDailyReport !== null) {
         return {
           status: 200,
           error: false,

@@ -15,11 +15,9 @@ const dailyReportSchema = new mongoose.Schema({
   },
   totalSellingPrice: {
     type: Number,
-    required: true,
   },
   totalProfit: {
     type: Number,
-    required: true,
   },
   totalLoss: {
     type: Number,
