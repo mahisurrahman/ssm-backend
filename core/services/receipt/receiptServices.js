@@ -8,6 +8,7 @@ const { uuid } = require("uuidv4");
 
 //Generate Receipt//
 const generateReciept = async (salesCreated) => {
+  console.log(salesCreated);
   try {
     if (salesCreated.length <= 0) {
       return {
@@ -18,22 +19,36 @@ const generateReciept = async (salesCreated) => {
       };
     }
     const recieptNumber = uuid();
-    let tLoss = 0;
-    let tProf = 0;
+    let totalProfit = 0;
+    let totalLoss = 0;
+
     for (let product of salesCreated) {
       if (product.profit > 0) {
-        tProf = tProf + product.profit;
+        totalProfit += product.profit;
       } else {
-        tLoss = tLoss + product.loss;
+        totalLoss += product.loss;
       }
     }
 
-    const receipts = await Reciepts.create({
+    const receiptData = {
       receiptKey: recieptNumber,
-      totalLoss: tLoss,
-      totalProfit: tProf,
       soldProducts: salesCreated,
-    });
+    };
+
+    let totalCalc = 0;
+    if (totalProfit > totalLoss) {
+      totalCalc = totalProfit - totalLoss;
+      receiptData.totalProfit = totalCalc;
+    } else if (totalLoss > totalProfit) {
+      totalCalc = totalLoss - totalProfit;
+      receiptData.totalLoss = totalCalc;
+    } else if (totalLoss === totalProfit) {
+      totalCalc = 0;
+      receiptData.totalLoss = 0;
+      receiptData.totalProfit = 0;
+    }
+
+    const receipts = await Reciepts.create(receiptData);
 
     if (receipts) {
       let generateDailyReport = await dailyRportServices.newDailyReport(

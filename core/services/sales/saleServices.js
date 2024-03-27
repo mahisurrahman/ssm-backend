@@ -40,7 +40,7 @@ const checkSalesData = async (sales) => {
 
     //Checking Stock Availability//
     for (let sale of sales) {
-      let productStock = await Stocks.findOne({ productId: sale.productId });
+      let productStock = await Stocks.find({ productId: sale.productId });
       if (sale.quantitySold > productStock.stockQuantity) {
         return {
           status: 400,
@@ -154,7 +154,7 @@ const createSales = async (dataArray) => {
           status: 200,
           error: false,
           message: "Success - Added the Sales and the Reciept",
-          data: generateReceipts,
+          data: null,
         };
       } else {
         return {

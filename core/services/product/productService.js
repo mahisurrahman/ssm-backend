@@ -21,15 +21,27 @@ const productCreation = async (data) => {
       productName: productName,
       description: description,
       price: intPrice,
+      stockId: 0,
     });
+
+    letProdID = result._id;
 
     //Creating Stock While Creating Product//
     let resultStock = null;
     if (result) {
+      let stringProdId = result._id;
       resultStock = await Stocks.create({
-        productId: result._id,
+        productId: stringProdId,
         stockQuantity: stockValue,
       });
+
+      //Update Product Collection and Insert Stock ID//
+      let updateProductCollection = await Products.findOneAndUpdate(
+        { _id: letProdID },
+        {
+          stockId: resultStock._id,
+        }
+      );
       return {
         status: 200,
         error: false,
