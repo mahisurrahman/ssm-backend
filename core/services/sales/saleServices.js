@@ -7,7 +7,40 @@ const receiptServices = require("../receipt/receiptServices.js");
 //Validate Data before Pushing Data to Database//
 const checkSalesData = async (sales) => {
   try {
-    //Check User Has Given same product Id Twice or Not//
+    //Check Product Available on Product Collection or not//
+    for (let sale of sales) {
+      let checkProductAvailability = await Products.findOne({
+        _id: sale.productId,
+      });
+
+      if (checkProductAvailability === null) {
+        return {
+          status: 404,
+          error: true,
+          message: `${sale.productId} is not available on our Product Lists`,
+          data: null,
+        };
+      }
+    }
+
+    //Check if the product Has Stock or not//
+    for (let sale of sales) {
+      let productDetails = await Products.findOne({
+        _id: sale.productId,
+      });
+      let productStockId = productDetails.stockId;
+      let stockDetails = await Stocks.findOne({ _id: productStockId });
+      if (sale.quantitySold > stockDetails.stockQuantity) {
+        return {
+          status: 404,
+          error: true,
+          message: `${productDetails.productName} has insufficient Stock`,
+          data: null,
+        };
+      }
+    }
+
+    // Check User Has Given same product Id Twice or Not//
     const exists = {};
     for (let sale of sales) {
       if (!exists[sale.productId]) {
@@ -26,7 +59,7 @@ const checkSalesData = async (sales) => {
       }
     }
 
-    //Check if the Quanity Sold is Zero or Not//
+    // Check if the Quantity Sold is Zero or Not//
     for (let sale of sales) {
       if (sale.quantitySold <= 0) {
         return {
@@ -38,7 +71,7 @@ const checkSalesData = async (sales) => {
       }
     }
 
-    //Checking Stock Availability//
+    // Checking Stock Availability//
     for (let sale of sales) {
       let productStock = await Stocks.find({ productId: sale.productId });
       if (sale.quantitySold > productStock.stockQuantity) {
@@ -56,7 +89,7 @@ const checkSalesData = async (sales) => {
       let productDetails = await Products.findOne({ _id: sale.productId });
       let stockDetails = await Stocks.findOne({ productId: sale.productId });
 
-      //Calculated Profit and Loss//
+      // Calculated Profit and Loss//
       let profitAmnt = 0;
       let lossAmnt = 0;
       if (sale.sellingPrice > productDetails.price) {
@@ -67,7 +100,7 @@ const checkSalesData = async (sales) => {
           (productDetails.price - sale.sellingPrice) * sale.quantitySold;
       }
 
-      //Wrapping the Data//
+      // Wrapping the Data//
       let saleData = {
         productId: sale.productId,
         productName: productDetails.productName,
@@ -81,7 +114,7 @@ const checkSalesData = async (sales) => {
       dataArray.push(saleData);
     }
 
-    //Transfer the Data to the Create Sales Function//
+    // Transfer the Data to the Create Sales Function//
     const transferData = await createSales(dataArray);
     return transferData;
   } catch (error) {
