@@ -7,55 +7,42 @@ const DailyRprt = require("../../../models/dailyReport-model");
 //Generate Sales//
 const newDailyReport = async (soldProduct) => {
   try {
-    console.log(soldProduct);
     const productId = soldProduct.productId;
-
     const findOldData = await DailyRprt.findOne({ productId: productId });
 
     if (findOldData !== null) {
-      let prevTotalProfit = findOldData.totalProfit;
-      let prevTotalLoss = findOldData.totalLoss;
       let prevQtySold = findOldData.totalQuantitySold;
       let prevBuyingPrice = findOldData.totalBuyingPrice;
       let prevSellingPrice = findOldData.totalSellingPrice;
-      let totalProf = 0;
-      let totalLoss = 0;
-      let finalProf = 0;
-      let finalLoss = 0;
-      let calcValue = 0;
 
       let totalQty = prevQtySold + soldProduct.quantitySold;
-      let totalBuyCost = prevBuyingPrice + soldProduct.buyingPrice;
-      let totalSellCost = prevSellingPrice + soldProduct.sellingPrice;
+      let defaultBuyCost = soldProduct.buyingPrice * totalQty;
+      let totalBuyCost = defaultBuyCost + prevBuyingPrice;
+      let defaultSellCost = soldProduct.sellingPrice * totalQty;
+      let totalSellCost = defaultSellCost + prevSellingPrice;
 
-      if (soldProduct.profit > 0) {
-        if (prevTotalProfit > 0) {
-          totalProf = prevTotalProfit + soldProduct.profit;
-        } else if (prevTotalLoss > 0) {
-          calcValue = soldProduct.profit - prevTotalLoss;
-          prevTotalLoss = 0;
-          if (totalProf < 0) {
-            totalLoss = calcValue;
-          } else {
-          }
-        }
-      } else if (soldProduct.loss > 0) {
-        if (prevTotalLoss > 0) {
-          totalLoss = prevTotalLoss + soldProduct.loss;
-        } else if (prevTotalProfit > 0) {
-          totalLoss = soldProduct.loss - prevTotalProfit;
-          prevTotalProfit = 0;
-        }
+      const dailyReportData = {
+        totalBuyingPrice: totalBuyCost,
+        totalSellingPrice: totalSellCost,
+        totalQuantitySold: totalQty,
+      };
+
+      if (totalBuyCost > totalSellCost) {
+        totalLoss = totalBuyCost - totalSellCost;
+        dailyReportData.totalLoss = totalLoss;
+        dailyReportData.totalProfit = 0;
+      } else if (totalSellCost > totalBuyCost) {
+        totalProf = totalSellCost - totalBuyCost;
+        dailyReportData.totalProfit = totalProf;
+        dailyReportData.totalLoss = 0;
+      } else if (totalBuyCost == totalSellCost) {
+        dailyReportData.totalProfit = 0;
+        dailyReportData.totalLoss = 0;
       }
+
       const updateDailyRprt = await DailyRprt.updateOne(
         { productId: soldProduct.productId },
-        {
-          totalBuyingPrice: totalBuyCost,
-          totalSellingPrice: totalSellCost,
-          totalProfit: totalProf,
-          totalLoss: totalLoss,
-          totalQuantitySold: totalQty,
-        },
+        dailyReportData,
         { new: true }
       );
 
@@ -75,15 +62,32 @@ const newDailyReport = async (soldProduct) => {
         };
       }
     } else {
-      const createDailyReport = await DailyRprt.create({
+      let totalPordQty = soldProduct.quantitySold;
+      let totalBuyAmnt = soldProduct.buyingPrice * totalPordQty;
+      let totalSellAmnt = soldProduct.sellingPrice * totalPordQty;
+
+      const dailyReportData = {
         productId: productId,
         productName: soldProduct.productName,
-        totalBuyingPrice: soldProduct.buyingPrice,
-        totalSellingPrice: soldProduct.sellingPrice,
-        totalProfit: soldProduct.profit,
-        totalLoss: soldProduct.loss,
-        totalQuantitySold: soldProduct.quantitySold,
-      });
+        totalBuyingPrice: totalBuyAmnt,
+        totalSellingPrice: totalSellAmnt,
+        totalQuantitySold: totalPordQty,
+      };
+
+      if (totalBuyAmnt > totalSellAmnt) {
+        let totalLoss = totalBuyAmnt - totalSellAmnt;
+        dailyReportData.totalLoss = totalLoss;
+        dailyReportData.totalProfit = 0;
+      } else if (totalSellAmnt > totalBuyAmnt) {
+        let totalProf = totalSellAmnt - totalBuyAmnt;
+        dailyReportData.totalProfit = totalProf;
+        dailyReportData.totalLoss = 0;
+      } else if (totalBuyAmnt == totalSellAmnt) {
+        dailyReportData.totalProfit = 0;
+        dailyReportData.totalLoss = 0;
+      }
+
+      const createDailyReport = await DailyRprt.create(dailyReportData);
 
       if (createDailyReport) {
         return {
