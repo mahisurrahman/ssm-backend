@@ -67,9 +67,7 @@ const removeProduct = async (req, res) => {
 //Update a Product Info//
 const updateAProductInfo = async (req, res) => {
   try {
-    const uptInfo = req.body;
-    const prodId = req.params.id;
-    const response = await productServices.updateSingleProd(uptInfo, prodId);
+    const response = await productServices.updateSingleProd(req.body, req.params);
     return res.send({ response });
   } catch (error) {
     console.log(error);

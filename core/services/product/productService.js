@@ -171,26 +171,63 @@ const removeSingleProd = async (data) => {
 };
 
 //Update a Single Product//
-const updateSingleProd = async (uptInfo, prodId) => {
+const updateSingleProd = async (body, params) => {
   try {
-    const filter = { _id: prodId };
-    let myUpData = {};
+    let prodId = params.id;
+    let findProdDetails = null;
 
-    if (uptInfo.productName) {
-      myUpData.productName = uptInfo.productName;
+    findProdDetails = await Products.findOne({ _id: prodId, isDeleted: false });
+    if (findProdDetails) {
+      if (body.productName) {
+        const result = await Products.updateOne(
+          { _id: prodId },
+          { productName: body.productName },
+          { new: true }
+        );
+        if (result) {
+          return {
+            status: 200,
+            error: false,
+            message: "Product Info Updated",
+            data: result,
+          };
+        } else {
+          return {
+            status: 409,
+            error: true,
+            message: "Product Info Wasn't Updated",
+            data: null,
+          };
+        }
+      }
+      if (body.description) {
+        const result = await Products.updateOne(
+          { _id: prodId },
+          { description: body.description },
+          { new: true }
+        );
+        if (result) {
+          return {
+            status: 200,
+            error: false,
+            message: "Product Info Updated",
+            data: result,
+          };
+        } else {
+          return {
+            status: 409,
+            error: true,
+            message: "Product Info Wasn't Updated",
+            data: null,
+          };
+        }
+      }
     }
-
-    if (uptInfo.description) {
-      myUpData.description = uptInfo.description;
-    }
-    const updatedData = { $set: myUpData };
-    const result = await Products.updateOne(filter, updatedData);
-
     return {
-      status: 200,
-      error: false,
-      message: "Success",
-      data: result,
+      status: 404,
+      error: true,
+      message: "Failed",
+      data: null,
     };
   } catch (error) {
     console.log(error);
