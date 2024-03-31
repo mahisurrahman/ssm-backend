@@ -17,12 +17,14 @@ const stockCreation = async (data) => {
     const existsData = await Stocks.findOne({
       productId: prodId,
       isDeleted: false,
+      isActive: true,
     });
     if (existsData) {
       return {
         status: 400,
         error: true,
-        message: "Stock Already Exists",
+        message:
+          "Stock Already Exists !! Please update the Stock Quantity Manually",
         data: null,
       };
     } else {

@@ -14,47 +14,67 @@ const productCreation = async (data) => {
       };
     }
     let intPrice = parseInt(price);
+    let result = null;
+    let isExistsProd = null;
+    let updateProductCollection = null;
     let stockValue = stockQuantity ? parseInt(stockQuantity) : 0;
 
-    //Creating Product on the Database//
-    let result = await Products.create({
-      productName: productName,
-      description: description,
-      price: intPrice,
-      stockId: 0,
-    });
+    isExistsProd = await Products.findOne({ productName: productName });
 
-    letProdID = result._id;
-
-    //Creating Stock While Creating Product//
-    let resultStock = null;
-    if (result) {
-      let stringProdId = result._id;
-      resultStock = await Stocks.create({
-        productId: stringProdId,
-        stockQuantity: stockValue,
-      });
-
-      //Update Product Collection and Insert Stock ID//
-      let updateProductCollection = await Products.findOneAndUpdate(
-        { _id: letProdID },
-        {
-          stockId: resultStock._id,
-        }
-      );
+    if (isExistsProd !== null) {
       return {
-        status: 200,
-        error: false,
-        message: "Product and Stock Added",
-        data: null,
+        status: 409,
+        error: true,
+        message: "Product Exists Already",
+        data: isExistsProd,
       };
     } else {
-      return {
-        status: 400,
-        error: true,
-        message: "Stock wasn't added",
-        data: null,
-      };
+      //Creating Product on the Database//
+      result = await Products.create({
+        productName: productName,
+        description: description,
+        price: intPrice,
+        stockId: 0,
+      });
+
+      letProdID = result._id;
+
+      //Creating Stock While Creating Product//
+      let resultStock = null;
+      if (result) {
+        let stringProdId = result._id;
+        resultStock = await Stocks.create({
+          productId: stringProdId,
+          stockQuantity: stockValue,
+        });
+
+        //Update Product Collection and Insert Stock ID//
+        updateProductCollection = await Products.findOneAndUpdate(
+          { _id: letProdID },
+          {
+            stockId: resultStock._id,
+          }
+        );
+        if (
+          result !== null &&
+          resultStock !== null &&
+          updateProductCollection !== null
+        ) {
+          return {
+            status: 200,
+            error: false,
+            message: "Product and Stock Added",
+            data: updateProductCollection,
+          };
+        }
+      } else {
+        return {
+          status: 400,
+          error: true,
+          message: "Stock wasn't added",
+          data: null,
+        };
+      }
     }
   } catch (error) {
     console.error(error);
