@@ -124,7 +124,7 @@ const showSingleProd = async (data) => {
       return {
         status: 404,
         error: true,
-        message: "Failed or Sales not Found",
+        message: "Failed or Product not Found",
         data: null,
       };
     }
