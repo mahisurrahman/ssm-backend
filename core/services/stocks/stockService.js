@@ -1,3 +1,4 @@
+const Products = require("../../../models/product-model");
 const Stocks = require("../../../models/stock-model");
 
 //Creating Stock//
@@ -13,6 +14,17 @@ const stockCreation = async (data) => {
         data: null,
       };
     }
+
+    let productExists = await Products.findOne({ _id: prodId });
+    if (!productExists) {
+      return {
+        status: 404,
+        error: true,
+        message: "Product Not Found",
+        data: null,
+      };
+    }
+
     let stockValue = parseInt(stockQuantity);
     const existsData = await Stocks.findOne({
       productId: prodId,
@@ -146,7 +158,7 @@ const stockIncrease = async (data, prodId) => {
 //Stcok Descreasing//
 const stockDecrease = async (data, prodId) => {
   try {
-    const id = prodId;
+    const id = prodId.id;
     const newStockAmount = Math.abs(data); //Even if User gives a negative value, it will convert into absolute value//
     const result = await Stocks.findOne({ productId: id, isDeleted: false });
 
