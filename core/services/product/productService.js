@@ -4,8 +4,8 @@ const Stocks = require("../../../models/stock-model.js");
 //Product Creation//
 const productCreation = async (data) => {
   try {
-    const { productName, description, price, stockQuantity } = data;
-    if (!productName || !description || !price) {
+    const { productName, description, price, stockQuantity, productImg } = data;
+    if (!productName || !description || !price || !productImg) {
       return {
         status: 204,
         error: true,
@@ -33,6 +33,7 @@ const productCreation = async (data) => {
       result = await Products.create({
         productName: productName,
         description: description,
+        productImg: productImg,
         price: intPrice,
         stockId: 0,
       });
