@@ -3,12 +3,18 @@ const Products = require("../../../models/sales-model");
 const Stocks = require("../../../models/stock-model");
 const Receipts = require("../../../models/receipt-model");
 const DailyRprt = require("../../../models/dailyReport-model");
+const { ListSearchIndexesCursor } = require("mongodb");
 
 //Generate Sales//
 const newDailyReport = async (soldProduct) => {
   try {
     const productId = soldProduct.productId;
-    const findOldData = await DailyRprt.findOne({ productId: productId });
+    let today = Date.now();
+    console.log("todat", today);
+    const findOldData = await DailyRprt.findOne({
+      productId: productId,
+      // range search
+    });
 
     if (findOldData !== null) {
       let prevQtySold = findOldData.totalQuantitySold;

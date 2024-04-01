@@ -162,7 +162,7 @@ const stockDecrease = async (data, prodId) => {
     const newStockAmount = Math.abs(data); //Even if User gives a negative value, it will convert into absolute value//
     const result = await Stocks.findOne({ productId: id, isDeleted: false });
 
-    if (result.stockQuantity > 0) {
+    if (result?.stockQuantity > 0) {
       const updatedData = await Stocks.updateOne(
         {
           productId: id,
@@ -241,7 +241,7 @@ const displayStock = async () => {
   } catch (error) {
     console.log(error);
     return {
-      stauts: 500,
+      status: 500,
       error: true,
       message: "Internal Server Error",
       data: error,
@@ -275,7 +275,7 @@ const displaySingleStock = async (prodId) => {
   } catch (error) {
     console.log(error);
     return {
-      stauts: 500,
+      status: 500,
       error: true,
       message: "Internal Server Error",
       data: error,
@@ -293,7 +293,7 @@ const removeSingleStock = async (prodId) => {
         $set: {
           isDeleted: true,
           isActive: false,
-          deletedDate: Date.now(),
+          deleteDate: Date.now(),
         },
       },
       { new: true }
@@ -315,7 +315,7 @@ const removeSingleStock = async (prodId) => {
   } catch (error) {
     console.log(error);
     return {
-      stauts: 500,
+      status: 500,
       error: true,
       message: "Internal Server Error",
       data: error,
