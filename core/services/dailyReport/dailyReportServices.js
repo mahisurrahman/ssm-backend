@@ -3,19 +3,33 @@ const Products = require("../../../models/sales-model");
 const Stocks = require("../../../models/stock-model");
 const Receipts = require("../../../models/receipt-model");
 const DailyRprt = require("../../../models/dailyReport-model");
-const { ListSearchIndexesCursor } = require("mongodb");
 
 //Generate Sales//
 const newDailyReport = async (soldProduct) => {
   try {
     const productId = soldProduct.productId;
-    let today = Date.now();
-    console.log("todat", today);
+    // const today = new Date();
+    // const yesterday = new Date(today);
+    // yesterday.setDate(yesterday.getDate() - 1);
+    // yesterday.setHours(0, 0, 0, 0);
+    // const tomorrow = new Date(today);
+    // tomorrow.setDate(tomorrow.getDate() + 1);
+    // tomorrow.setHours(0, 0, 0, 0);
+    // console.log(yesterday, "yesterday");
+    // console.log(tomorrow, "tomorrow");
+
+    let today = new Date();
+    today.setHours(0, 0, 0, 0);
+    let tom = new Date();
+    tom.setHours(23, 59, 59, 999);
+    // console.log(today.toISOString(), "today");
+    // console.log(tom.toISOString(), "tom");
+
     const findOldData = await DailyRprt.findOne({
       productId: productId,
-      // range search
+      createDate: { $gte: today, $lte: tom },
     });
-
+    // console.log(findOldData);
     if (findOldData !== null) {
       let prevQtySold = findOldData.totalQuantitySold;
       let prevBuyingPrice = findOldData.totalBuyingPrice;
