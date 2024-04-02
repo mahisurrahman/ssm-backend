@@ -253,10 +253,11 @@ const displayStock = async () => {
 const displaySingleStock = async (prodId) => {
   try {
     const id = prodId.id;
-    const productId = await Stocks.find({
+    const productId = await Stocks.findOne({
       productId: id,
       isDeleted: false,
     });
+    console.log(productId);
     if (productId && productId.length !== 0) {
       return {
         status: 200,
