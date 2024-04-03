@@ -32,6 +32,22 @@ const showProducts = async (req, res) => {
   }
 };
 
+//Show All Products (Including isDeleted:true)//
+const showAllProducts = async (req, res) => {
+  try {
+    const response = await productServices.showAllProductsOfDb();
+    return res.send(response);
+  } catch (error) {
+    console.error(error);
+    return res.send({
+      status: 500,
+      error: true,
+      message: "Internal Server Error",
+      data: error,
+    });
+  }
+};
+
 //Show a Single Product//
 const showSingleProduct = async (req, res) => {
   try {
@@ -67,7 +83,10 @@ const removeProduct = async (req, res) => {
 //Update a Product Info//
 const updateAProductInfo = async (req, res) => {
   try {
-    const response = await productServices.updateSingleProd(req.body, req.params);
+    const response = await productServices.updateSingleProd(
+      req.body,
+      req.params
+    );
     return res.send({ response });
   } catch (error) {
     console.log(error);
@@ -100,6 +119,7 @@ const updateAProductPrice = async (req, res) => {
 
 module.exports = {
   showProducts,
+  showAllProducts,
   createProducts,
   removeProduct,
   showSingleProduct,

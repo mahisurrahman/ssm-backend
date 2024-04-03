@@ -257,7 +257,6 @@ const displaySingleStock = async (prodId) => {
       productId: id,
       isDeleted: false,
     });
-    console.log(productId);
     if (productId && productId.length !== 0) {
       return {
         status: 200,

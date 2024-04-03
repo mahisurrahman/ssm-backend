@@ -109,6 +109,27 @@ const showAllProducts = async () => {
   }
 };
 
+//Show All Products (Including isDeleted:true)//
+const showAllProductsOfDb = async () => {
+  try {
+    const result = await Products.find();
+    return {
+      status: 200,
+      error: false,
+      message: "Success",
+      data: result,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      status: 500,
+      error: true,
+      message: "Internal Server Error",
+      data: error,
+    };
+  }
+};
+
 //Show Single Product//
 const showSingleProd = async (data) => {
   try {
@@ -273,6 +294,7 @@ const updatePriceOfAProd = async (uptInfo, prodId) => {
 module.exports = {
   productCreation,
   showAllProducts,
+  showAllProductsOfDb,
   showSingleProd,
   removeSingleProd,
   updateSingleProd,
