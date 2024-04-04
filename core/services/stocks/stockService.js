@@ -249,6 +249,37 @@ const displayStock = async () => {
   }
 };
 
+//Display All Stock (including isDeleted )//
+
+const displayAllStock = async ()=>{
+  try {
+    const result = await Stocks.find();
+    if (result) {
+      return {
+        status: 200,
+        error: false,
+        message: "Success",
+        data: result,
+      };
+    } else {
+      return {
+        status: 404,
+        error: true,
+        message: "Failed",
+        data: null,
+      };
+    }
+  } catch (error) {
+    console.log(error);
+    return {
+      status: 500,
+      error: true,
+      message: "Internal Server Error",
+      data: error,
+    };
+  }
+}
+
 //Display Single Stock Values//
 const displaySingleStock = async (prodId) => {
   try {
@@ -330,5 +361,6 @@ module.exports = {
   stockDecrease,
   displayStock,
   displaySingleStock,
+  displayAllStock,
   removeSingleStock,
 };

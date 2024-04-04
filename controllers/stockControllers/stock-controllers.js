@@ -81,6 +81,22 @@ const showStock = async (req, res) => {
   }
 };
 
+//Show All Stock Including (isDeleted)//
+const showAllStock = async (req, res)=>{
+  try {
+    const response = await stockServices.displayAllStock();
+    return res.send(response);
+  } catch (error) {
+    console.log(error);
+    return res.send({
+      stauts: 500,
+      error: true,
+      message: "Internal Server Error",
+      data: error,
+    });
+  }
+}
+
 //Show single Stock Values//
 const showSingleStock = async (req, res) => {
   try {
@@ -119,5 +135,6 @@ module.exports = {
   decreaseStock,
   showStock,
   showSingleStock,
+  showAllStock,
   removeStock,
 };
