@@ -10,7 +10,6 @@ const {
   updateAProductPrice,
 } = require("../../controllers/productControllers/product-controllers.js");
 
-// router.use('/').post(postProducts);
 router.post("/crt", createProducts);
 router.get("/src", showProducts);
 router.get("/src/all", showAllProducts);
