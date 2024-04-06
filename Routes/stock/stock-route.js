@@ -9,7 +9,7 @@ const {
   showStock,
   showSingleStock,
   removeStock,
-  showAllStock
+  showAllStock,
 } = require("../../controllers/stockControllers/stock-controllers");
 
 //Routes//

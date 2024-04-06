@@ -1,5 +1,6 @@
 const Products = require("../../../models/product-model");
 const Stocks = require("../../../models/stock-model.js");
+const stockService = require("../stocks/stockService.js");
 
 //Product Creation//
 const productCreation = async (data) => {
@@ -175,6 +176,7 @@ const removeSingleProd = async (data) => {
       },
       { new: true }
     );
+    stockService.removeSingleStock({ id: prodId });
     return {
       status: 200,
       error: false,
