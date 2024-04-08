@@ -20,7 +20,7 @@ const productCreation = async (data) => {
     let updateProductCollection = null;
     let stockValue = stockQuantity ? parseInt(stockQuantity) : 0;
 
-    isExistsProd = await Products.findOne({ productName: productName });
+    isExistsProd = await Products.findOne({ productName: productName, isDeleted:false });
 
     if (isExistsProd !== null) {
       return {
