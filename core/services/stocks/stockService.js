@@ -158,7 +158,7 @@ const stockIncrease = async (data, prodId) => {
 //Stcok Descreasing//
 const stockDecrease = async (data, prodId) => {
   try {
-    const id = prodId.id;
+    const id = prodId;
     const newStockAmount = Math.abs(data); //Even if User gives a negative value, it will convert into absolute value//
     const result = await Stocks.findOne({ productId: id, isDeleted: false });
 

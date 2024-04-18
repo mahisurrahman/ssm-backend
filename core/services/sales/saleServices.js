@@ -143,7 +143,7 @@ const createSales = async (dataArray) => {
         profit: data.totalProfit,
         loss: data.totalLoss,
       });
-      if (generateSales) {
+      if (generateSales.status === true) {
         reduceStock = await stockServices.stockDecrease(
           data.quantitySold,
           data.productId
