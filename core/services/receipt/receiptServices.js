@@ -94,12 +94,21 @@ const generateReciept = async (salesCreated) => {
 const showReciepts = async () => {
   try {
     const result = await Reciepts.find({ isDeleted: false });
-    return {
-      status: 200,
-      error: false,
-      message: "Success",
-      data: result,
-    };
+    if(result){
+      return {
+        status: 200,
+        error: false,
+        message: "Success",
+        data: result,
+      };
+    }else{
+      return{
+        status: 404,
+        error: true,
+        message: "No receipts found",
+        data: null,
+      }
+    }
   } catch (error) {
     console.log(error);
     return {
