@@ -139,12 +139,12 @@ const newDailyReport = async (soldProduct) => {
 //Show All Daily Reports//
 const showDailyReports = async () => {
   try {
-    const allReports = await DailyRprt.find({ isDeleted: false });
+    const allReports = await DailyRprt.find();
     return {
       status: 200,
       error: false,
       message: "Success - Shown All Reports",
-      data: null,
+      data: allReports,
     };
   } catch (error) {
     console.log(error);
